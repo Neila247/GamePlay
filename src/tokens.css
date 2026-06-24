@@ -58,6 +58,9 @@
   --ease:     cubic-bezier(0.2, 0, 0, 1);
   --dur-fast: 120ms;
   --dur-base: 200ms;
+
+  /* Fixed bottom nav clearance — button height + wrapper padding + iOS safe area */
+  --nav-bar-h: calc(var(--space-16) + var(--space-6) + env(safe-area-inset-bottom, 0px));
 }
 
 @media (prefers-reduced-motion: reduce) {

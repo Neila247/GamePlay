@@ -84,6 +84,11 @@ export function advance(state: SessionState): SessionState {
   return { ...state, index: state.index + 1 };
 }
 
+export function retreat(state: SessionState): SessionState {
+  if (state.index <= 0) return state;
+  return { ...state, index: state.index - 1 };
+}
+
 export function current(state: SessionState): SlideKind | undefined {
   return state.slides[state.index];
 }

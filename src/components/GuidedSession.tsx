@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { GameRules, PileDef, SetupStep, PlayStep } from "../../data/games/dutch-blitz.ts";
 import { TableLayout } from "./diagrams/TableLayout.tsx";
 import { CardSequence } from "./diagrams/CardSequence.tsx";
 import {
-  initSession, advance, current, isLast, stageOf, stageProgress,
+  initSession, advance, retreat, current, isLast, stageOf, stageProgress,
   STAGE_LABELS,
   type SlideKind,
 } from "../lib/session.ts";
@@ -13,11 +13,17 @@ type Props = { game: GameRules; onExit: () => void };
 
 export function GuidedSession({ game, onExit }: Props) {
   const [state, setState] = useState(() => initSession(game));
+  const mainRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    mainRef.current!.scrollTop = 0;
+  }, [state.index]);
+
   const slide = current(state);
 
   if (!slide) {
     return (
-      <div className="min-h-screen bg-bg flex items-center justify-center px-4">
+      <div className="min-h-svh bg-bg flex items-center justify-center px-4">
         <p className="text-ink-soft text-sm">No guided session available for this game yet.</p>
       </div>
     );
@@ -26,6 +32,7 @@ export function GuidedSession({ game, onExit }: Props) {
   const stage = stageOf(slide);
   const progress = stageProgress(state, slide);
   const last = isLast(state);
+  const canGoBack = state.index > 0;
   const prevStage = state.index > 0 ? stageOf(state.slides[state.index - 1]) : null;
   const stageChanged = prevStage !== null && prevStage !== stage;
 
@@ -37,69 +44,89 @@ export function GuidedSession({ game, onExit }: Props) {
     }
   }
 
+  function handleBack() {
+    setState(retreat(state));
+  }
+
   return (
-    <div className="min-h-screen bg-bg flex flex-col max-w-[480px] mx-auto">
-      {/* Header */}
-      <header className="px-4 pt-6 pb-3 flex items-center justify-between shrink-0">
-        <button
-          onClick={onExit}
-          className="text-sm text-ink-soft active:text-ink transition-colors"
-          style={{ transitionDuration: "var(--dur-fast)" }}
-        >
-          ← Exit
-        </button>
-        <span className="text-sm font-medium text-ink">
-          {STAGE_LABELS[stage]}
-        </span>
-        <span className="text-xs text-ink-soft tabular-nums">
-          {progress.current}/{progress.total}
-        </span>
-      </header>
+    <>
+      <div className="min-h-svh bg-bg flex flex-col max-w-[480px] mx-auto">
+        {/* Header */}
+        <header className="px-4 pt-6 pb-3 flex items-center justify-between shrink-0">
+          <button
+            onClick={onExit}
+            className="text-sm text-ink-soft active:text-ink transition-colors"
+            style={{ transitionDuration: "var(--dur-fast)" }}
+          >
+            ← Exit
+          </button>
+          <span className="text-sm font-medium text-ink">
+            {STAGE_LABELS[stage]}
+          </span>
+          <span className="text-xs text-ink-soft tabular-nums">
+            {progress.current}/{progress.total}
+          </span>
+        </header>
 
-      {/* Stage progress bar */}
-      <div className="px-4 pb-4 shrink-0">
-        <div className="h-1 bg-surface-sunk rounded-pill overflow-hidden">
-          <div
-            className="h-full bg-accent rounded-pill"
-            style={{
-              width: `${(progress.current / progress.total) * 100}%`,
-              transition: `width var(--dur-base) var(--ease)`,
-            }}
-          />
+        {/* Stage progress bar */}
+        <div className="px-4 pb-4 shrink-0">
+          <div className="h-1 bg-surface-sunk rounded-pill overflow-hidden">
+            <div
+              className="h-full bg-accent rounded-pill"
+              style={{
+                width: `${(progress.current / progress.total) * 100}%`,
+                transition: `width var(--dur-base) var(--ease)`,
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Stage transition callout — shown on the first slide of a new stage */}
+        {stageChanged && (
+          <div className="mx-4 mb-4 bg-surface-sunk rounded-card px-4 py-3 shrink-0">
+            <p className="text-xs font-medium text-ink-soft uppercase tracking-wide">
+              Up next
+            </p>
+            <p className="text-sm text-ink mt-1">{STAGE_LABELS[stage]}</p>
+          </div>
+        )}
+
+        {/* Slide content */}
+        <main ref={mainRef} className="flex-1 px-4 py-2 overflow-y-auto">
+          <SlideContent game={game} slide={slide} />
+        </main>
+
+        {/* Ask the teacher — available throughout the session */}
+        <div className="px-4 pt-2 pb-4 shrink-0">
+          <AskTeacher game={game} />
+        </div>
+
+        {/* Spacer — reserves height equal to the fixed nav so content above stays visible */}
+        <div className="shrink-0" style={{ height: "var(--nav-bar-h)" }} aria-hidden="true" />
+      </div>
+
+      {/* Sticky bottom nav — fixed, sits above the iOS safe area */}
+      <div className="fixed bottom-0 inset-x-0 bg-bg border-t border-border z-10">
+        <div className="max-w-[480px] mx-auto px-4 pt-4 pb-safe-area flex gap-3">
+          {canGoBack && (
+            <button
+              onClick={handleBack}
+              className="bg-surface-sunk text-ink font-medium text-base rounded-card py-4 px-6 border border-border active:opacity-80 transition-opacity"
+              style={{ transitionDuration: "var(--dur-fast)" }}
+            >
+              ← Back
+            </button>
+          )}
+          <button
+            onClick={handleNext}
+            className={`${canGoBack ? "flex-1" : "w-full"} bg-accent text-accent-ink font-medium text-base rounded-card py-4 px-6 shadow-1 active:opacity-80 transition-opacity`}
+            style={{ transitionDuration: "var(--dur-fast)" }}
+          >
+            {last ? "Done" : "Next →"}
+          </button>
         </div>
       </div>
-
-      {/* Stage transition callout — shown on the first slide of a new stage */}
-      {stageChanged && (
-        <div className="mx-4 mb-4 bg-surface-sunk rounded-card px-4 py-3 shrink-0">
-          <p className="text-xs font-medium text-ink-soft uppercase tracking-wide">
-            Up next
-          </p>
-          <p className="text-sm text-ink mt-1">{STAGE_LABELS[stage]}</p>
-        </div>
-      )}
-
-      {/* Slide content */}
-      <main className="flex-1 px-4 py-2 overflow-y-auto">
-        <SlideContent game={game} slide={slide} />
-      </main>
-
-      {/* Ask the teacher — available throughout the session */}
-      <div className="px-4 pt-2 shrink-0">
-        <AskTeacher game={game} />
-      </div>
-
-      {/* CTA */}
-      <div className="px-4 pt-4 pb-8 shrink-0">
-        <button
-          onClick={handleNext}
-          className="w-full bg-accent text-accent-ink font-medium text-base rounded-card py-4 px-6 shadow-1 active:opacity-80 transition-opacity"
-          style={{ transitionDuration: "var(--dur-fast)" }}
-        >
-          {last ? "Done" : "Next →"}
-        </button>
-      </div>
-    </div>
+    </>
   );
 }
 
