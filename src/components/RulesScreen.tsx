@@ -1,4 +1,4 @@
-import type { GameRules, PileDef, SetupStep, PlayStep } from "../../data/games/dutch-blitz.ts";
+import type { GameRules, PileDef, SetupStep, PlayStep, TurnPhase } from "../../data/games/dutch-blitz.ts";
 
 type Props = { game: GameRules; onStart: () => void; onBack?: () => void };
 
@@ -31,7 +31,7 @@ export function RulesScreen({ game, onStart, onBack }: Props) {
       </Section>
 
       {game.piles && game.piles.length > 0 && (
-        <Section title="The four piles">
+        <Section title="Key zones">
           <p className="text-sm text-ink-soft mb-4">
             Understanding these is 90% of the game.
           </p>
@@ -57,6 +57,17 @@ export function RulesScreen({ game, onStart, onBack }: Props) {
           <ol className="flex flex-col gap-3">
             {game.playLoop.steps.map((step, i) => (
               <PlayItem key={step.id} step={step} index={i + 1} />
+            ))}
+          </ol>
+        </Section>
+      )}
+
+      {game.turnStructure && (
+        <Section title="How a turn works">
+          <p className="text-sm text-ink-soft mb-4">{game.turnStructure.summary}</p>
+          <ol className="flex flex-col gap-3">
+            {game.turnStructure.phases.map((phase, i) => (
+              <TurnPhaseItem key={phase.id} phase={phase} index={i + 1} />
             ))}
           </ol>
         </Section>
@@ -218,6 +229,32 @@ function PlayItem({ step, index }: { step: PlayStep; index: number }) {
         <p className="text-sm text-ink">{step.instruction}</p>
         {step.detail && (
           <p className="text-xs text-ink-soft mt-1">{step.detail}</p>
+        )}
+      </div>
+    </li>
+  );
+}
+
+function TurnPhaseItem({ phase, index }: { phase: TurnPhase; index: number }) {
+  return (
+    <li className="flex gap-3">
+      <span className="text-sm font-medium text-ink-soft shrink-0 w-4 mt-0.5">
+        {index}.
+      </span>
+      <div>
+        <p className="text-sm text-ink">{phase.instruction}</p>
+        {phase.options && phase.options.length > 0 && (
+          <ul className="mt-2 flex flex-col gap-1">
+            {phase.options.map((opt, i) => (
+              <li key={i} className="text-xs text-ink-soft flex gap-2">
+                <span className="shrink-0">·</span>
+                <span>{opt}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+        {phase.detail && (
+          <p className="text-xs text-ink-soft mt-1">{phase.detail}</p>
         )}
       </div>
     </li>
