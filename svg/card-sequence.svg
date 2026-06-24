@@ -1,0 +1,96 @@
+<!--
+  Dutch Blitz — card anatomy + the two sequence rules.
+  Same token mapping as table-layout.svg (see that file's header).
+-->
+<svg viewBox="0 0 380 470" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <g id="figure" fill="#1C1C1A">
+      <circle cx="0" cy="0" r="4.2"/>
+      <path d="M -6 10 a 6 6 0 0 1 12 0 Z"/>
+    </g>
+    <marker id="arr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1 L 6 5 L 0 9 Z" fill="#6B6B66"/>
+    </marker>
+  </defs>
+
+  <!-- ===================== CARD ANATOMY ===================== -->
+  <text x="20" y="30" fill="#1C1C1A" font-size="12" font-weight="700" letter-spacing="1.2">A CARD</text>
+
+  <!-- enlarged card -->
+  <g transform="translate(24,44)">
+    <rect width="92" height="124" rx="10" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect width="92" height="22" rx="10" fill="#2F6DB0"/><rect y="11" width="92" height="11" fill="#2F6DB0"/>
+    <text x="12" y="62" fill="#1C1C1A" font-size="34" font-weight="700">5</text>
+    <use href="#figure" x="66" y="98"/>
+  </g>
+
+  <!-- callouts -->
+  <line x1="120" y1="56" x2="150" y2="50" stroke="#E4E4E2" stroke-width="1.5"/>
+  <text x="156" y="48" fill="#1C1C1A" font-size="11.5" font-weight="600">Colour</text>
+  <text x="156" y="63" fill="#6B6B66" font-size="10.5">red · blue · yellow · green</text>
+
+  <line x1="84" y1="104" x2="150" y2="104" stroke="#E4E4E2" stroke-width="1.5"/>
+  <text x="156" y="100" fill="#1C1C1A" font-size="11.5" font-weight="600">Number 1–10</text>
+  <text x="156" y="115" fill="#6B6B66" font-size="10.5">tells you where it can go</text>
+
+  <line x1="100" y1="142" x2="150" y2="150" stroke="#E4E4E2" stroke-width="1.5"/>
+  <text x="156" y="148" fill="#1C1C1A" font-size="11.5" font-weight="600">Boy or girl</text>
+  <text x="156" y="163" fill="#6B6B66" font-size="10.5">red/blue = boy, yellow/green = girl</text>
+
+  <line x1="20" y1="196" x2="360" y2="196" stroke="#E4E4E2" stroke-width="1"/>
+
+  <!-- ===================== DUTCH PILE: ASCENDING ===================== -->
+  <text x="20" y="224" fill="#1C1C1A" font-size="12" font-weight="700" letter-spacing="1.2">CENTRE PILE — BUILD UP, SAME COLOUR</text>
+
+  <!-- 1 -> 2 -> 3, all blue -->
+  <g transform="translate(28,236)">
+    <rect width="50" height="68" rx="7" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect width="50" height="13" rx="7" fill="#2F6DB0"/><rect y="6" width="50" height="7" fill="#2F6DB0"/>
+    <text x="7" y="40" fill="#1C1C1A" font-size="20" font-weight="700">1</text>
+  </g>
+  <line x1="86" y1="270" x2="108" y2="270" stroke="#6B6B66" stroke-width="1.5" marker-end="url(#arr)"/>
+  <g transform="translate(112,236)">
+    <rect width="50" height="68" rx="7" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect width="50" height="13" rx="7" fill="#2F6DB0"/><rect y="6" width="50" height="7" fill="#2F6DB0"/>
+    <text x="7" y="40" fill="#1C1C1A" font-size="20" font-weight="700">2</text>
+  </g>
+  <line x1="170" y1="270" x2="192" y2="270" stroke="#6B6B66" stroke-width="1.5" marker-end="url(#arr)"/>
+  <g transform="translate(196,236)">
+    <rect width="50" height="68" rx="7" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect width="50" height="13" rx="7" fill="#2F6DB0"/><rect y="6" width="50" height="7" fill="#2F6DB0"/>
+    <text x="7" y="40" fill="#1C1C1A" font-size="20" font-weight="700">3</text>
+  </g>
+  <text x="262" y="266" fill="#6B6B66" font-size="11">colour stays</text>
+  <text x="262" y="281" fill="#6B6B66" font-size="11">the same,</text>
+  <text x="262" y="296" fill="#6B6B66" font-size="11">number goes up</text>
+
+  <line x1="20" y1="328" x2="360" y2="328" stroke="#E4E4E2" stroke-width="1"/>
+
+  <!-- ===================== POST PILE: DESCENDING + ALTERNATE ===================== -->
+  <text x="20" y="356" fill="#1C1C1A" font-size="12" font-weight="700" letter-spacing="1.2">POST PILE — BUILD DOWN, ALTERNATE</text>
+
+  <!-- 8 red(boy) -> 7 yellow(girl) -> 6 blue(boy) -->
+  <g transform="translate(28,368)">
+    <rect width="50" height="68" rx="7" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect width="50" height="13" rx="7" fill="#C0443B"/><rect y="6" width="50" height="7" fill="#C0443B"/>
+    <text x="7" y="40" fill="#1C1C1A" font-size="20" font-weight="700">8</text>
+    <use href="#figure" x="38" y="56"/>
+  </g>
+  <line x1="86" y1="402" x2="108" y2="402" stroke="#6B6B66" stroke-width="1.5" marker-end="url(#arr)"/>
+  <g transform="translate(112,368)">
+    <rect width="50" height="68" rx="7" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect width="50" height="13" rx="7" fill="#D9A521"/><rect y="6" width="50" height="7" fill="#D9A521"/>
+    <text x="7" y="40" fill="#1C1C1A" font-size="20" font-weight="700">7</text>
+    <use href="#figure" x="38" y="56"/>
+  </g>
+  <line x1="170" y1="402" x2="192" y2="402" stroke="#6B6B66" stroke-width="1.5" marker-end="url(#arr)"/>
+  <g transform="translate(196,368)">
+    <rect width="50" height="68" rx="7" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect width="50" height="13" rx="7" fill="#2F6DB0"/><rect y="6" width="50" height="7" fill="#2F6DB0"/>
+    <text x="7" y="40" fill="#1C1C1A" font-size="20" font-weight="700">6</text>
+    <use href="#figure" x="38" y="56"/>
+  </g>
+  <text x="262" y="392" fill="#6B6B66" font-size="11">number goes</text>
+  <text x="262" y="407" fill="#6B6B66" font-size="11">down, and</text>
+  <text x="262" y="422" fill="#6B6B66" font-size="11">boy/girl flips</text>
+</svg>

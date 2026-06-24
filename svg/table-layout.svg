@@ -1,0 +1,137 @@
+<!--
+  Dutch Blitz — table layout teaching diagram.
+  Concrete fills below ARE the DESIGN.md token values, 1:1, so integration is a
+  find-and-replace when embedding as inline SVG/JSX:
+    #FAFAF9 -> var(--bg)         #FFFFFF -> var(--surface)
+    #F4F4F3 -> var(--surface-sunk)  #E4E4E2 -> var(--border)
+    #1C1C1A -> var(--ink)        #6B6B66 -> var(--ink-soft)
+    #3A3A38 -> var(--accent)
+  Card colours are game content, not brand — add tokens when wiring in:
+    #C0443B -> var(--card-red)   #2F6DB0 -> var(--card-blue)
+    #D9A521 -> var(--card-yellow) #3E8E5A -> var(--card-green)
+-->
+<svg viewBox="0 0 380 548" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <g id="head" fill="#6B6B66">
+      <circle cx="0" cy="0" r="2.6"/>
+      <path d="M -3.6 6 a 3.6 3.6 0 0 1 7.2 0 Z"/>
+    </g>
+  </defs>
+
+  <!-- ===================== SHARED CENTRE ===================== -->
+  <rect x="20" y="18" width="340" height="172" rx="12" fill="#F4F4F3" stroke="#E4E4E2"/>
+  <text x="34" y="40" fill="#1C1C1A" font-size="12" font-weight="700" letter-spacing="1.2">SHARED — THE CENTRE</text>
+
+  <!-- four Dutch Piles, one per colour -->
+  <!-- red -->
+  <g transform="translate(40,54)">
+    <rect x="6" y="6" width="44" height="60" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="3" y="3" width="44" height="60" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="0" y="0" width="44" height="60" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="0" y="0" width="44" height="11" rx="6" fill="#C0443B"/>
+    <rect x="0" y="6" width="44" height="5" fill="#C0443B"/>
+    <text x="6" y="34" fill="#1C1C1A" font-size="16" font-weight="700">1</text>
+  </g>
+  <!-- blue -->
+  <g transform="translate(116,54)">
+    <rect x="6" y="6" width="44" height="60" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="3" y="3" width="44" height="60" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="0" y="0" width="44" height="60" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="0" y="0" width="44" height="11" rx="6" fill="#2F6DB0"/>
+    <rect x="0" y="6" width="44" height="5" fill="#2F6DB0"/>
+    <text x="6" y="34" fill="#1C1C1A" font-size="16" font-weight="700">1</text>
+  </g>
+  <!-- yellow -->
+  <g transform="translate(192,54)">
+    <rect x="6" y="6" width="44" height="60" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="3" y="3" width="44" height="60" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="0" y="0" width="44" height="60" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="0" y="0" width="44" height="11" rx="6" fill="#D9A521"/>
+    <rect x="0" y="6" width="44" height="5" fill="#D9A521"/>
+    <text x="6" y="34" fill="#1C1C1A" font-size="16" font-weight="700">1</text>
+  </g>
+  <!-- green -->
+  <g transform="translate(268,54)">
+    <rect x="6" y="6" width="44" height="60" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="3" y="3" width="44" height="60" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="0" y="0" width="44" height="60" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="0" y="0" width="44" height="11" rx="6" fill="#3E8E5A"/>
+    <rect x="0" y="6" width="44" height="5" fill="#3E8E5A"/>
+    <text x="6" y="34" fill="#1C1C1A" font-size="16" font-weight="700">1</text>
+  </g>
+
+  <text x="34" y="146" fill="#6B6B66" font-size="11">Build UP 1 → 10, same colour.</text>
+  <text x="34" y="162" fill="#6B6B66" font-size="11">Everyone plays onto these. Each card = 1 point.</text>
+  <text x="34" y="180" fill="#1C1C1A" font-size="11" font-weight="600">Any exposed “1” must come up here to start a pile.</text>
+
+  <!-- arrow linking your area up to the centre -->
+  <path d="M 190 214 L 190 192" stroke="#6B6B66" stroke-width="1.5" fill="none"/>
+  <path d="M 190 190 l -4 6 l 8 0 Z" fill="#6B6B66"/>
+
+  <!-- ===================== YOUR PLAY AREA ===================== -->
+  <rect x="20" y="216" width="340" height="316" rx="12" fill="#F4F4F3" stroke="#E4E4E2"/>
+  <text x="34" y="238" fill="#1C1C1A" font-size="12" font-weight="700" letter-spacing="1.2">YOUR PLAY AREA</text>
+
+  <!-- Post Piles (left) -->
+  <text x="34" y="258" fill="#6B6B66" font-size="10" font-weight="700" letter-spacing="0.8">POST PILES</text>
+  <!-- red 8 (boy) -->
+  <g transform="translate(34,266)">
+    <rect width="40" height="54" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect width="40" height="10" rx="6" fill="#C0443B"/><rect y="5" width="40" height="5" fill="#C0443B"/>
+    <text x="5" y="30" fill="#1C1C1A" font-size="14" font-weight="700">8</text>
+    <use href="#head" x="31" y="45"/>
+  </g>
+  <!-- yellow 7 (girl) -->
+  <g transform="translate(82,266)">
+    <rect width="40" height="54" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect width="40" height="10" rx="6" fill="#D9A521"/><rect y="5" width="40" height="5" fill="#D9A521"/>
+    <text x="5" y="30" fill="#1C1C1A" font-size="14" font-weight="700">7</text>
+    <use href="#head" x="31" y="45"/>
+  </g>
+  <!-- blue 6 (boy) -->
+  <g transform="translate(130,266)">
+    <rect width="40" height="54" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect width="40" height="10" rx="6" fill="#2F6DB0"/><rect y="5" width="40" height="5" fill="#2F6DB0"/>
+    <text x="5" y="30" fill="#1C1C1A" font-size="14" font-weight="700">6</text>
+    <use href="#head" x="31" y="45"/>
+  </g>
+  <text x="34" y="334" fill="#6B6B66" font-size="10.5">Build DOWN ↓, alternate boy / girl</text>
+
+  <!-- Blitz Pile (right, highlighted) -->
+  <text x="244" y="258" fill="#3A3A38" font-size="10" font-weight="700" letter-spacing="0.8">BLITZ PILE</text>
+  <g transform="translate(244,266)">
+    <rect x="8" y="8" width="44" height="58" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="4" y="4" width="44" height="58" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="0" y="0" width="44" height="58" rx="6" fill="#FFFFFF" stroke="#3A3A38" stroke-width="2.5"/>
+    <rect x="0" y="0" width="44" height="11" rx="6" fill="#3E8E5A"/><rect x="0" y="6" width="44" height="5" fill="#3E8E5A"/>
+    <text x="6" y="33" fill="#1C1C1A" font-size="15" font-weight="700">3</text>
+  </g>
+  <text x="244" y="338" fill="#1C1C1A" font-size="10.5" font-weight="600">Your key pile (10).</text>
+  <text x="244" y="352" fill="#6B6B66" font-size="10.5">Empty it to win the hand!</text>
+
+  <!-- Wood Pile (lower left) -->
+  <text x="34" y="384" fill="#6B6B66" font-size="10" font-weight="700" letter-spacing="0.8">WOOD PILE</text>
+  <g transform="translate(34,392)">
+    <rect x="4" y="4" width="42" height="56" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="0" y="0" width="42" height="56" rx="6" fill="#FFFFFF" stroke="#E4E4E2"/>
+    <rect x="0" y="0" width="42" height="11" rx="6" fill="#D9A521"/><rect x="0" y="6" width="42" height="5" fill="#D9A521"/>
+    <text x="5" y="33" fill="#1C1C1A" font-size="15" font-weight="700">4</text>
+  </g>
+  <text x="34" y="470" fill="#6B6B66" font-size="10.5">Turn your hand up,</text>
+  <text x="34" y="484" fill="#6B6B66" font-size="10.5">three at a time. Top card plays.</text>
+
+  <!-- Hand (lower right, face down) -->
+  <text x="244" y="384" fill="#6B6B66" font-size="10" font-weight="700" letter-spacing="0.8">YOUR HAND</text>
+  <g transform="translate(248,392)" stroke="#E4E4E2">
+    <rect x="0" y="0" width="42" height="56" rx="6" fill="#1C1C1A"/>
+    <rect x="9" y="-3" width="42" height="56" rx="6" fill="#3A3A38"/>
+    <rect x="18" y="-6" width="42" height="56" rx="6" fill="#1C1C1A"/>
+    <path d="M 28 8 l 22 22 M 18 18 l 22 22" stroke="#6B6B66" stroke-width="1" fill="none" opacity="0.5"/>
+  </g>
+  <text x="244" y="470" fill="#6B6B66" font-size="10.5">Held face down.</text>
+  <text x="244" y="484" fill="#6B6B66" font-size="10.5">No peeking ahead!</text>
+
+  <!-- legend: boy/girl glyph -->
+  <use href="#head" x="40" y="512"/>
+  <text x="50" y="516" fill="#6B6B66" font-size="10">= the boy / girl figure on each card (it’s what you alternate on Post Piles)</text>
+</svg>

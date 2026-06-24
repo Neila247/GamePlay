@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# [functions] block disabled for static-only deploy — re-enable when API key is ready.
+# [functions]
+#   directory = "netlify/functions"
+#   node_bundler = "esbuild"
+#
+# The teacher function declares its own path (/api/teacher) via `export const
+# config` in netlify/functions/teacher.mts, so no manual redirect is needed.

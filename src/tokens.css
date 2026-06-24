@@ -13,6 +13,12 @@
   --accent-ink:   #FFFFFF;
   --warn:         #9A6B2F;
 
+  /* Card colours — game content, not brand; used in Dutch Blitz diagrams */
+  --card-red:    #C0443B;
+  --card-blue:   #2F6DB0;
+  --card-yellow: #D9A521;
+  --card-green:  #3E8E5A;
+
   /* Typography */
   --font-display: system-ui, -apple-system, sans-serif;
   --font-body:    system-ui, -apple-system, sans-serif;

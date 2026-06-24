@@ -1,10 +1,13 @@
 import { useState } from "react";
 import type { GameRules, PileDef, SetupStep, PlayStep } from "../../data/games/dutch-blitz.ts";
+import { TableLayout } from "./diagrams/TableLayout.tsx";
+import { CardSequence } from "./diagrams/CardSequence.tsx";
 import {
   initSession, advance, current, isLast, stageOf, stageProgress,
   STAGE_LABELS,
   type SlideKind,
 } from "../lib/session.ts";
+import { AskTeacher } from "./AskTeacher.tsx";
 
 type Props = { game: GameRules; onExit: () => void };
 
@@ -81,6 +84,11 @@ export function GuidedSession({ game, onExit }: Props) {
         <SlideContent game={game} slide={slide} />
       </main>
 
+      {/* Ask the teacher — available throughout the session */}
+      <div className="px-4 pt-2 shrink-0">
+        <AskTeacher game={game} />
+      </div>
+
       {/* CTA */}
       <div className="px-4 pt-4 pb-8 shrink-0">
         <button
@@ -123,6 +131,9 @@ function SlideContent({ game, slide }: { game: GameRules; slide: SlideKind }) {
 // ---------------------------------------------------------------------------
 
 function PileSlide({ pile, index, total }: { pile: PileDef; index: number; total: number }) {
+  const showTableLayout = index === 0;
+  const showCardSequence = pile.sequence === "ascending" || pile.sequence === "descending";
+
   return (
     <div className="flex flex-col gap-6 py-4">
       <div>
@@ -134,6 +145,12 @@ function PileSlide({ pile, index, total }: { pile: PileDef; index: number; total
           <p className="text-sm text-ink-soft mt-1">{pile.location}</p>
         )}
       </div>
+
+      {showTableLayout && (
+        <div className="rounded-card overflow-hidden border border-border bg-surface-sunk p-3">
+          <TableLayout />
+        </div>
+      )}
 
       {pile.count && (
         <div className="bg-surface-sunk rounded-card px-4 py-3 inline-block self-start">
@@ -152,6 +169,12 @@ function PileSlide({ pile, index, total }: { pile: PileDef; index: number; total
         <p className="text-sm text-ink-soft">
           Cards are built <span className="font-medium text-ink">{pile.sequence}</span>.
         </p>
+      )}
+
+      {showCardSequence && (
+        <div className="rounded-card overflow-hidden border border-border bg-surface-sunk p-3">
+          <CardSequence />
+        </div>
       )}
     </div>
   );

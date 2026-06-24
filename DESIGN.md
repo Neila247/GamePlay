@@ -36,6 +36,16 @@ muted accent. Deliberately quiet — this should read as "not styled yet."
 | `--accent-ink`   | `#FFFFFF`   | text/icon on accent                   |
 | `--warn`         | `#9A6B2F`   | the UNVERIFIED badge / cautions       |
 
+**Card colours** — game content, not brand. Used only in teaching diagrams.
+These represent the four Dutch Blitz card colours and stay constant across skins.
+
+| Token            | PoC value   | Role                                  |
+|------------------|-------------|---------------------------------------|
+| `--card-red`     | `#C0443B`   | Dutch Blitz red card header           |
+| `--card-blue`    | `#2F6DB0`   | Dutch Blitz blue card header          |
+| `--card-yellow`  | `#D9A521`   | Dutch Blitz yellow card header        |
+| `--card-green`   | `#3E8E5A`   | Dutch Blitz green card header         |
+
 > The accent is intentionally a near-charcoal, not a brand colour. When you
 > pick a direction, this is the first value to change.
 
