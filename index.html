@@ -5,9 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#FAFAF9" />
     <title>Onboard</title>
+    <style>
+      /*
+        Pre-mount loading screen.
+        Defines the two tokens it needs so var() works before tokens.css loads.
+        Values mirror tokens.css exactly — update both if the skin changes.
+        React's createRoot().render() replaces #root's children on mount,
+        removing .onboard-loader automatically.
+      */
+      :root {
+        --bg: #FAFAF9;
+        --ink-soft: #6B6B66;
+      }
+      html, body { margin: 0; padding: 0; }
+      #root { background: var(--bg); }
+      .onboard-loader {
+        min-height: 100svh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .onboard-spinner {
+        color: var(--ink-soft);
+        animation: ob-spin 0.9s linear infinite;
+      }
+      @keyframes ob-spin { to { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) {
+        .onboard-spinner { animation: none; opacity: 0.35; }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="onboard-loader" role="status" aria-label="Loading">
+        <svg
+          class="onboard-spinner"
+          width="28" height="28" viewBox="0 0 28 28"
+          fill="none" xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="14" cy="14" r="10" stroke-width="2.5"
+            stroke="currentColor" opacity="0.15" />
+          <path d="M14 4 A10 10 0 0 1 24 14"
+            stroke-width="2.5" stroke="currentColor" stroke-linecap="round" />
+        </svg>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

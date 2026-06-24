@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import type { GameRules, PileDef, SetupStep, PlayStep } from "../../data/games/dutch-blitz.ts";
 import { TableLayout } from "./diagrams/TableLayout.tsx";
 import { CardSequence } from "./diagrams/CardSequence.tsx";
@@ -15,8 +15,14 @@ export function GuidedSession({ game, onExit }: Props) {
   const [state, setState] = useState(() => initSession(game));
   const mainRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    mainRef.current!.scrollTop = 0;
+  useLayoutEffect(() => {
+    const el = mainRef.current;
+    if (!el) return;
+    // rAF ensures the new slide's content has laid out before resetting scroll.
+    // useLayoutEffect fires before paint; rAF fires after layout, before the
+    // next paint — the combination is reliable on mobile Safari.
+    const id = requestAnimationFrame(() => { el.scrollTop = 0; });
+    return () => cancelAnimationFrame(id);
   }, [state.index]);
 
   const slide = current(state);
@@ -50,7 +56,7 @@ export function GuidedSession({ game, onExit }: Props) {
 
   return (
     <>
-      <div className="min-h-svh bg-bg flex flex-col max-w-[480px] mx-auto">
+      <div className="h-svh bg-bg flex flex-col max-w-[480px] mx-auto">
         {/* Header */}
         <header className="px-4 pt-6 pb-3 flex items-center justify-between shrink-0">
           <button
