@@ -1,30 +1,45 @@
-type Props = { onSelectDutchBlitz: () => void };
+import caboCover from "../assets/covers/cabo.jpg";
+import dutchBlitzCover from "../assets/covers/dutch-blitz.jpg";
+import fungiMorelsCover from "../assets/covers/fungi-morels.jpg";
+import highSocietyCover from "../assets/covers/high-society.png";
+import jaipurCover from "../assets/covers/jaipur.jpg";
+import kitesCover from "../assets/covers/kites.png";
+import klusterCover from "../assets/covers/kluster.jpg";
+import landVsSeaCover from "../assets/covers/land-vs-sea.png";
+import monopolyDealCover from "../assets/covers/monopoly-deal.jpg";
+import parisCover from "../assets/covers/paris.jpg";
+import skullCover from "../assets/covers/skull.jpg";
+import sushiGoCover from "../assets/covers/sushi-go.jpg";
+import theMindCover from "../assets/covers/the-mind.png";
+import unoFlipCover from "../assets/covers/uno-flip.jpg";
+
+type Props = { onSelectGame: (id: string) => void };
 
 type GameEntry = {
   id: string;
   name: string;
-  tileBg: string;
+  cover: string;
   active: boolean;
 };
 
 const GAMES: GameEntry[] = [
-  { id: "land-vs-sea",  name: "Land vs Sea",                  tileBg: "bg-surface-sunk", active: false },
-  { id: "paris",        name: "Paris: Die Stadt der Lichter", tileBg: "bg-surface-sunk", active: false },
-  { id: "kites",        name: "Kites",                        tileBg: "bg-surface-sunk", active: false },
-  { id: "jaipur",       name: "Jaipur",                       tileBg: "bg-surface-sunk", active: false },
-  { id: "fungi",        name: "Fungi",                        tileBg: "bg-surface-sunk", active: false },
-  { id: "high-society", name: "High Society",                 tileBg: "bg-surface-sunk", active: false },
-  { id: "kluster",      name: "Kluster",                      tileBg: "bg-surface-sunk", active: false },
-  { id: "skull",        name: "Skull",                        tileBg: "bg-surface-sunk", active: false },
-  { id: "sushi-go",     name: "Sushi Go!",                    tileBg: "bg-surface-sunk", active: false },
-  { id: "dutch-blitz",  name: "Dutch Blitz",                  tileBg: "bg-card-green",   active: true  },
-  { id: "uno-flip",     name: "UNO Flip!",                    tileBg: "bg-surface-sunk", active: false },
-  { id: "the-mind",     name: "The Mind",                     tileBg: "bg-surface-sunk", active: false },
-  { id: "monopoly-deal",name: "Monopoly Deal",                tileBg: "bg-surface-sunk", active: false },
-  { id: "cabo",         name: "CABO",                         tileBg: "bg-surface-sunk", active: false },
+  { id: "land-vs-sea",   name: "Land vs Sea",                  cover: landVsSeaCover,    active: true },
+  { id: "paris",         name: "Paris: La Cité de la Lumière", cover: parisCover,        active: true },
+  { id: "kites",         name: "Kites",                        cover: kitesCover,        active: true },
+  { id: "jaipur",        name: "Jaipur",                       cover: jaipurCover,       active: true },
+  { id: "fungi-morels",  name: "Fungi",                        cover: fungiMorelsCover,  active: true },
+  { id: "high-society",  name: "High Society",                 cover: highSocietyCover,  active: true },
+  { id: "kluster",       name: "Kluster",                      cover: klusterCover,      active: true },
+  { id: "skull",         name: "Skull",                        cover: skullCover,        active: true },
+  { id: "sushi-go",      name: "Sushi Go!",                    cover: sushiGoCover,      active: true },
+  { id: "dutch-blitz",   name: "Dutch Blitz",                  cover: dutchBlitzCover,   active: true },
+  { id: "uno-flip",      name: "UNO Flip!",                    cover: unoFlipCover,      active: true },
+  { id: "the-mind",      name: "The Mind",                     cover: theMindCover,      active: true },
+  { id: "monopoly-deal", name: "Monopoly Deal",                cover: monopolyDealCover, active: true },
+  { id: "cabo",          name: "CABO",                         cover: caboCover,         active: true },
 ];
 
-export function Home({ onSelectDutchBlitz }: Props) {
+export function Home({ onSelectGame }: Props) {
   return (
     <div className="min-h-screen bg-bg">
       <header className="px-4 pt-8 pb-6">
@@ -32,12 +47,12 @@ export function Home({ onSelectDutchBlitz }: Props) {
       </header>
 
       <main className="px-4 pb-12">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 items-start">
           {GAMES.map((game) =>
             game.active ? (
               <button
                 key={game.id}
-                onClick={onSelectDutchBlitz}
+                onClick={() => onSelectGame(game.id)}
                 className="text-left w-full group"
               >
                 <GameTile game={game} />
@@ -57,14 +72,13 @@ export function Home({ onSelectDutchBlitz }: Props) {
 function GameTile({ game }: { game: GameEntry }) {
   return (
     <div>
-      {/*
-        Image slot — swappable: replace the background with
-        <img src="..." className="w-full h-full object-cover" />
-        without touching the layout wrapper below.
-      */}
-      <div
-        className={`aspect-box w-full rounded-card overflow-hidden ${game.tileBg}`}
-      />
+      <div className="rounded-card overflow-hidden bg-surface-sunk shadow-1">
+        <img
+          src={game.cover}
+          alt={game.name}
+          className="w-full h-auto block"
+        />
+      </div>
       <p className="text-sm font-medium text-ink mt-2 leading-snug">
         {game.name}
       </p>
