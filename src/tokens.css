@@ -1,0 +1,62 @@
+/* Design tokens — the single re-skin surface.
+   All values come from DESIGN.md. Components never reference raw values. */
+
+:root {
+  /* Colour */
+  --bg:           #FAFAF9;
+  --surface:      #FFFFFF;
+  --surface-sunk: #F4F4F3;
+  --border:       #E4E4E2;
+  --ink:          #1C1C1A;
+  --ink-soft:     #6B6B66;
+  --accent:       #3A3A38;
+  --accent-ink:   #FFFFFF;
+  --warn:         #9A6B2F;
+
+  /* Typography */
+  --font-display: system-ui, -apple-system, sans-serif;
+  --font-body:    system-ui, -apple-system, sans-serif;
+  --font-mono:    ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
+
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.25rem;
+  --text-xl:   1.5rem;
+  --text-2xl:  2rem;
+  --text-3xl:  2.5rem;
+
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-bold:   700;
+
+  /* Spacing (4px base) */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radius */
+  --radius-sm:   6px;
+  --radius-card: 10px;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.06);
+
+  /* Motion */
+  --ease:     cubic-bezier(0.2, 0, 0, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+  }
+}
