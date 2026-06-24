@@ -1,11 +1,20 @@
 import type { GameRules, PileDef, SetupStep, PlayStep } from "../../data/games/dutch-blitz.ts";
 
-type Props = { game: GameRules; onStart: () => void };
+type Props = { game: GameRules; onStart: () => void; onBack?: () => void };
 
-export function RulesScreen({ game, onStart }: Props) {
+export function RulesScreen({ game, onStart, onBack }: Props) {
   return (
     <div className="min-h-screen bg-bg px-4 py-8 max-w-[480px] mx-auto">
       <header className="mb-8">
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="text-sm text-ink-soft active:text-ink transition-colors mb-4 block"
+            style={{ transitionDuration: "var(--dur-fast)" }}
+          >
+            ← Back
+          </button>
+        )}
         <p className="text-sm text-ink-soft font-medium mb-1">Rules</p>
         <h1 className="text-2xl font-bold text-ink">{game.name}</h1>
         <div className="flex gap-2 mt-3 flex-wrap">

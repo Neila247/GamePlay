@@ -25,4 +25,15 @@ body {
   .pb-safe-area {
     padding-bottom: max(var(--space-4), env(safe-area-inset-bottom, 0px));
   }
+
+  /* Game box aspect ratio — portrait box shape (2:3) */
+  .aspect-box {
+    aspect-ratio: 2 / 3;
+  }
+
+  /* Card colour backgrounds — wired from tokens, used in game tiles and diagrams */
+  .bg-card-green  { background-color: var(--card-green);  }
+  .bg-card-red    { background-color: var(--card-red);    }
+  .bg-card-blue   { background-color: var(--card-blue);   }
+  .bg-card-yellow { background-color: var(--card-yellow); }
 }

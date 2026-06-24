@@ -15,6 +15,10 @@ export default {
       accent: "var(--accent)",
       "accent-ink": "var(--accent-ink)",
       warn: "var(--warn)",
+      "card-red": "var(--card-red)",
+      "card-blue": "var(--card-blue)",
+      "card-yellow": "var(--card-yellow)",
+      "card-green": "var(--card-green)",
     },
     borderRadius: {
       none: "0",
@@ -56,7 +60,11 @@ export default {
       1: "var(--shadow-1)",
       none: "none",
     },
-    extend: {},
+    extend: {
+      aspectRatio: {
+        box: "2 / 3",
+      },
+    },
   },
   plugins: [],
 };
