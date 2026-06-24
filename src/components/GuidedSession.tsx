@@ -1,5 +1,5 @@
 import { useState, useRef, useLayoutEffect } from "react";
-import type { GameRules, PileDef, SetupStep, PlayStep } from "../../data/games/dutch-blitz.ts";
+import type { GameRules, PileDef, SetupStep } from "../../data/games/dutch-blitz.ts";
 import { TableLayout } from "./diagrams/TableLayout.tsx";
 import { CardSequence } from "./diagrams/CardSequence.tsx";
 import {
@@ -143,27 +143,51 @@ export function GuidedSession({ game, onExit }: Props) {
 function SlideContent({ game, slide }: { game: GameRules; slide: SlideKind }) {
   switch (slide.kind) {
     case "pile":
-      return <PileSlide pile={game.piles![slide.pileIndex]} total={game.piles!.length} index={slide.pileIndex} />;
+      return <PileSlide pile={game.piles![slide.pileIndex]} total={game.piles!.length} index={slide.pileIndex} gameId={game.id} />;
+    case "concept": {
+      const entries = Object.entries(game.glossary ?? {});
+      const [term, def] = entries[slide.termIndex];
+      return <ConceptSlide term={term} definition={def} index={slide.termIndex} total={entries.length} />;
+    }
     case "setup":
       return <SetupSlide step={game.setup[slide.stepIndex]} index={slide.stepIndex} total={game.setup.length} />;
     case "practice-intro":
       return <PracticeIntroSlide game={game} />;
     case "play-step":
       return <PlayStepSlide step={game.playLoop!.steps[slide.stepIndex]} index={slide.stepIndex} total={game.playLoop!.steps.length} />;
+    case "turn-phase": {
+      const phases = game.turnStructure!.phases;
+      return <TurnPhaseSlide phase={phases[slide.phaseIndex]} index={slide.phaseIndex} total={phases.length} />;
+    }
     case "priorities":
       return <PrioritiesSlide priorities={game.priorities!} />;
     case "end-condition":
       return <EndConditionSlide calls={game.specialCalls!} endOfRound={game.endOfRound} />;
     case "scoring":
-      return <ScoringSlide scoring={game.scoring!} winCondition={game.winCondition} />;
+      return <ScoringSlide game={game} scoring={game.scoring} winCondition={game.winCondition} />;
   }
+}
+
+// ---------------------------------------------------------------------------
+// Shared utility
+// ---------------------------------------------------------------------------
+
+function DiagramPlaceholder({ label }: { label?: string }) {
+  return (
+    <div className="rounded-card border border-border bg-surface-sunk h-32 flex items-center justify-center">
+      <span className="text-xs text-ink-soft">{label ?? "Diagram"}</span>
+    </div>
+  );
 }
 
 // ---------------------------------------------------------------------------
 // Slide components — read from game data, never hardcode game-specific strings
 // ---------------------------------------------------------------------------
 
-function PileSlide({ pile, index, total }: { pile: PileDef; index: number; total: number }) {
+function PileSlide({ pile, index, total, gameId }: { pile: PileDef; index: number; total: number; gameId: string }) {
+  // TableLayout and CardSequence are Dutch-Blitz-specific SVGs; all other games
+  // use the neutral placeholder until their own diagrams are built.
+  const isDutchBlitz = gameId === "dutch-blitz";
   const showTableLayout = index === 0;
   const showCardSequence = pile.sequence === "ascending" || pile.sequence === "descending";
 
@@ -181,7 +205,7 @@ function PileSlide({ pile, index, total }: { pile: PileDef; index: number; total
 
       {showTableLayout && (
         <div className="rounded-card overflow-hidden border border-border bg-surface-sunk p-3">
-          <TableLayout />
+          {isDutchBlitz ? <TableLayout /> : <DiagramPlaceholder label={`${pile.name} layout`} />}
         </div>
       )}
 
@@ -206,9 +230,37 @@ function PileSlide({ pile, index, total }: { pile: PileDef; index: number; total
 
       {showCardSequence && (
         <div className="rounded-card overflow-hidden border border-border bg-surface-sunk p-3">
-          <CardSequence />
+          {isDutchBlitz ? <CardSequence /> : <DiagramPlaceholder label={`${pile.sequence} sequence`} />}
         </div>
       )}
+    </div>
+  );
+}
+
+// Concept slide: glossary-term-based concept tour for turn-based games without piles.
+function ConceptSlide({ term, definition, index, total }: {
+  term: string;
+  definition: string;
+  index: number;
+  total: number;
+}) {
+  return (
+    <div className="flex flex-col gap-6 py-4">
+      <div>
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+          Concept {index + 1} of {total}
+        </p>
+        <h2 className="text-2xl font-bold text-ink">{term}</h2>
+      </div>
+
+      <DiagramPlaceholder label={term} />
+
+      <div className="bg-surface rounded-card shadow-1 border border-border px-4 py-4">
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+          What it is
+        </p>
+        <p className="text-base text-ink leading-relaxed">{definition}</p>
+      </div>
     </div>
   );
 }
@@ -232,31 +284,40 @@ function SetupSlide({ step, index, total }: { step: SetupStep; index: number; to
   );
 }
 
+// CHANGED: branches on playModel so real-time and turn-based get appropriate wording.
 function PracticeIntroSlide({ game }: { game: GameRules }) {
+  const isRealTime = game.playModel === "real-time";
+  const summary = isRealTime
+    ? game.playLoop?.summary
+    : game.turnStructure?.summary;
+
   return (
     <div className="flex flex-col gap-6 py-4">
       <div>
         <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
-          Coached Practice
+          {isRealTime ? "Coached Practice" : "How to Play"}
         </p>
-        <h2 className="text-2xl font-bold text-ink">Let's slow it down.</h2>
+        <h2 className="text-2xl font-bold text-ink">
+          {isRealTime ? "Let's slow it down." : "Let's walk through a turn."}
+        </h2>
       </div>
 
-      {game.playLoop && (
+      {summary && (
         <div className="bg-surface rounded-card shadow-1 border border-border px-4 py-4">
-          <p className="text-base text-ink leading-relaxed">{game.playLoop.summary}</p>
+          <p className="text-base text-ink leading-relaxed">{summary}</p>
         </div>
       )}
 
       <p className="text-sm text-ink-soft">
-        We'll walk through what's happening step by step, then surface the priorities
-        that separate a good player from a confused one.
+        {isRealTime
+          ? "We'll walk through what's happening step by step, then surface the priorities that separate a good player from a confused one."
+          : "We'll walk through each action you can take on your turn, so nothing surprises you at the table."}
       </p>
     </div>
   );
 }
 
-function PlayStepSlide({ step, index, total }: { step: PlayStep; index: number; total: number }) {
+function PlayStepSlide({ step, index, total }: { step: { id: string; instruction: string; detail?: string }; index: number; total: number }) {
   return (
     <div className="flex flex-col gap-6 py-4">
       <div>
@@ -269,6 +330,41 @@ function PlayStepSlide({ step, index, total }: { step: PlayStep; index: number; 
       {step.detail && (
         <div className="bg-surface-sunk rounded-card px-4 py-3">
           <p className="text-sm text-ink-soft">{step.detail}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// New: renders each phase of a turn-based game's turnStructure.
+function TurnPhaseSlide({ phase, index, total }: {
+  phase: { id: string; instruction: string; options?: string[]; detail?: string };
+  index: number;
+  total: number;
+}) {
+  return (
+    <div className="flex flex-col gap-6 py-4">
+      <div>
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+          {index + 1} of {total} · On your turn
+        </p>
+        <h2 className="text-xl font-bold text-ink leading-snug">{phase.instruction}</h2>
+      </div>
+
+      {phase.options && phase.options.length > 0 && (
+        <ul className="flex flex-col gap-3">
+          {phase.options.map((opt, i) => (
+            <li key={i} className="bg-surface rounded-card shadow-1 border border-border px-4 py-3 flex gap-3">
+              <span className="text-ink-soft shrink-0 mt-px">—</span>
+              <span className="text-sm text-ink">{opt}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {phase.detail && (
+        <div className="bg-surface-sunk rounded-card px-4 py-3">
+          <p className="text-sm text-ink-soft">{phase.detail}</p>
         </div>
       )}
     </div>
@@ -338,24 +434,34 @@ function EndConditionSlide({
   );
 }
 
-function ScoringSlide({ scoring, winCondition }: { scoring: string[]; winCondition: string }) {
+// scoring is optional — games without a scoring rubric still need to show the win condition.
+function ScoringSlide({ game, scoring, winCondition }: { game: GameRules; scoring?: string[]; winCondition: string }) {
   return (
     <div className="flex flex-col gap-6 py-4">
       <div>
         <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
-          After each hand
+          {scoring?.length ? "After each round" : "How to win"}
         </p>
-        <h2 className="text-2xl font-bold text-ink">Scoring.</h2>
+        <h2 className="text-2xl font-bold text-ink">{scoring?.length ? "Scoring." : "Win condition."}</h2>
       </div>
 
-      <ul className="flex flex-col gap-2">
-        {scoring.map((line, i) => (
-          <li key={i} className="flex gap-3 text-sm text-ink">
-            <span className="text-ink-soft shrink-0 mt-px">—</span>
-            <span>{line}</span>
-          </li>
-        ))}
-      </ul>
+      {game.endOfRound && (
+        <div className="bg-surface-sunk rounded-card px-4 py-3">
+          <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-1">How a round ends</p>
+          <p className="text-sm text-ink">{game.endOfRound}</p>
+        </div>
+      )}
+
+      {scoring && scoring.length > 0 && (
+        <ul className="flex flex-col gap-2">
+          {scoring.map((line, i) => (
+            <li key={i} className="flex gap-3 text-sm text-ink">
+              <span className="text-ink-soft shrink-0 mt-px">—</span>
+              <span>{line}</span>
+            </li>
+          ))}
+        </ul>
+      )}
 
       <div className="border-t border-border pt-4">
         <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
@@ -365,7 +471,7 @@ function ScoringSlide({ scoring, winCondition }: { scoring: string[]; winConditi
       </div>
 
       <div className="bg-surface-sunk rounded-card px-4 py-4 text-center">
-        <p className="text-base font-medium text-ink">You know Dutch Blitz.</p>
+        <p className="text-base font-medium text-ink">You know {game.name}.</p>
         <p className="text-sm text-ink-soft mt-1">Shuffle up and deal.</p>
       </div>
     </div>

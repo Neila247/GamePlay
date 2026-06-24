@@ -9,9 +9,11 @@ import type { GameRules } from "../../data/games/dutch-blitz.ts";
 
 export type SlideKind =
   | { kind: "pile"; pileIndex: number }
+  | { kind: "concept"; termIndex: number }   // glossary-based concept tour (turn-based)
   | { kind: "setup"; stepIndex: number }
   | { kind: "practice-intro" }
   | { kind: "play-step"; stepIndex: number }
+  | { kind: "turn-phase"; phaseIndex: number }
   | { kind: "priorities" }
   | { kind: "end-condition" }
   | { kind: "scoring" };
@@ -21,11 +23,11 @@ export type Stage = "concept-tour" | "setup" | "coached-practice";
 export const STAGE_LABELS: Record<Stage, string> = {
   "concept-tour": "Concept Tour",
   setup: "Setup",
-  "coached-practice": "Coached Practice",
+  "coached-practice": "How to Play",
 };
 
 export function stageOf(slide: SlideKind): Stage {
-  if (slide.kind === "pile") return "concept-tour";
+  if (slide.kind === "pile" || slide.kind === "concept") return "concept-tour";
   if (slide.kind === "setup") return "setup";
   return "coached-practice";
 }
@@ -54,15 +56,45 @@ function buildRealTimeSlides(game: GameRules): SlideKind[] {
 
   if (game.priorities?.length) slides.push({ kind: "priorities" });
   if (game.specialCalls?.length) slides.push({ kind: "end-condition" });
-  if (game.scoring?.length) slides.push({ kind: "scoring" });
+  // Always show a final slide for win condition / scoring, even if scoring is absent.
+  slides.push({ kind: "scoring" });
+
+  return slides;
+}
+
+function buildTurnBasedSlides(game: GameRules): SlideKind[] {
+  const slides: SlideKind[] = [];
+
+  // Stage 1: concept tour — use piles if defined, otherwise glossary terms
+  if (game.piles && game.piles.length > 0) {
+    game.piles.forEach((_, i) => slides.push({ kind: "pile", pileIndex: i }));
+  } else if (game.glossary) {
+    Object.keys(game.glossary).forEach((_, i) =>
+      slides.push({ kind: "concept", termIndex: i })
+    );
+  }
+
+  // Stage 2: confirm-to-advance setup steps
+  game.setup.forEach((_, i) => slides.push({ kind: "setup", stepIndex: i }));
+
+  // Stage 3: turn-by-turn walkthrough
+  slides.push({ kind: "practice-intro" });
+
+  game.turnStructure?.phases.forEach((_, i) =>
+    slides.push({ kind: "turn-phase", phaseIndex: i })
+  );
+
+  if (game.priorities?.length) slides.push({ kind: "priorities" });
+  if (game.specialCalls?.length) slides.push({ kind: "end-condition" });
+  // Always show a final slide for win condition / scoring, even if scoring is absent.
+  slides.push({ kind: "scoring" });
 
   return slides;
 }
 
 export function buildSlides(game: GameRules): SlideKind[] {
   if (game.playModel === "real-time") return buildRealTimeSlides(game);
-  // turn-based flow not yet implemented
-  return [];
+  return buildTurnBasedSlides(game);
 }
 
 // ---------------------------------------------------------------------------
