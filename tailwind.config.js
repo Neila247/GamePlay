@@ -64,6 +64,12 @@ export default {
       aspectRatio: {
         box: "2 / 3",
       },
+      maxWidth: {
+        app: "var(--app-max-w)",
+      },
+      letterSpacing: {
+        eyebrow: "0.06em",
+      },
     },
   },
   plugins: [],

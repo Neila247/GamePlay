@@ -4,7 +4,7 @@ type Props = { game: GameRules; onStart: () => void; onBack?: () => void };
 
 export function RulesScreen({ game, onStart, onBack }: Props) {
   return (
-    <div className="min-h-screen bg-bg px-4 py-8 max-w-[480px] mx-auto">
+    <div className="min-h-screen bg-bg px-4 py-8 max-w-app mx-auto">
       <header className="mb-8">
         {onBack && (
           <button
@@ -15,8 +15,8 @@ export function RulesScreen({ game, onStart, onBack }: Props) {
             ← Back
           </button>
         )}
-        <p className="text-sm text-ink-soft font-medium mb-1">Rules</p>
-        <h1 className="text-2xl font-bold text-ink">{game.name}</h1>
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">Rules</p>
+        <h1 className="font-display text-2xl font-bold text-ink">{game.name}</h1>
         <div className="flex gap-2 mt-3 flex-wrap">
           <Badge>{game.players.min}–{game.players.max} players</Badge>
           {game.estimatedMinutes && (
@@ -168,7 +168,7 @@ export function RulesScreen({ game, onStart, onBack }: Props) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mb-8">
-      <h2 className="text-lg font-bold text-ink mb-4 pb-2 border-b border-border">
+      <h2 className="font-display text-lg font-bold text-ink mb-4 pb-2 border-b border-border">
         {title}
       </h2>
       {children}

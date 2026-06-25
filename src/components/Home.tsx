@@ -42,18 +42,34 @@ const GAMES: GameEntry[] = [
 export function Home({ onSelectGame }: Props) {
   return (
     <div className="min-h-screen bg-bg">
-      <header className="px-4 pt-8 pb-6">
-        <h1 className="text-xl font-bold text-ink">Your games</h1>
+      <header className="px-4 pt-8 pb-4">
+        <h1 className="font-display text-xl font-bold text-ink">Your games</h1>
+        <p className="text-sm text-ink-soft mt-2">Learn the game you already own.</p>
       </header>
 
+      <div className="px-4 pb-6 flex gap-2">
+        <div className="flex-1 flex items-center gap-2 bg-surface border border-border rounded-card px-4 py-3">
+          <SearchGlyph />
+          <span className="text-sm text-ink-soft">Search by name</span>
+        </div>
+        <button
+          type="button"
+          className="flex items-center gap-2 bg-surface border border-border rounded-card px-4 text-sm text-ink"
+          style={{ WebkitTapHighlightColor: "transparent" }}
+        >
+          <CameraGlyph /> Scan
+        </button>
+      </div>
+
       <main className="px-4 pb-12">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 items-start">
+        <div className="grid grid-cols-2 gap-4 items-start">
           {GAMES.map((game) =>
             game.active ? (
               <button
                 key={game.id}
                 onClick={() => onSelectGame(game.id)}
-                className="text-left w-full group"
+                className="text-left w-full"
+                style={{ WebkitTapHighlightColor: "transparent" }}
               >
                 <GameTile game={game} />
               </button>
@@ -83,5 +99,23 @@ function GameTile({ game }: { game: GameEntry }) {
         {game.name}
       </p>
     </div>
+  );
+}
+
+function SearchGlyph() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink-soft)" strokeWidth="2" strokeLinecap="round">
+      <circle cx="11" cy="11" r="7" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  );
+}
+
+function CameraGlyph() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+      <circle cx="12" cy="13" r="4" />
+    </svg>
   );
 }

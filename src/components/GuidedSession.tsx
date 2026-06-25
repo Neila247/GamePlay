@@ -56,7 +56,7 @@ export function GuidedSession({ game, onExit }: Props) {
 
   return (
     <>
-      <div className="h-svh bg-bg flex flex-col max-w-[480px] mx-auto">
+      <div className="h-svh bg-bg flex flex-col max-w-app mx-auto">
         {/* Header */}
         <header className="px-4 pt-6 pb-3 flex items-center justify-between shrink-0">
           <button
@@ -90,7 +90,7 @@ export function GuidedSession({ game, onExit }: Props) {
         {/* Stage transition callout — shown on the first slide of a new stage */}
         {stageChanged && (
           <div className="mx-4 mb-4 bg-surface-sunk rounded-card px-4 py-3 shrink-0">
-            <p className="text-xs font-medium text-ink-soft uppercase tracking-wide">
+            <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow">
               Up next
             </p>
             <p className="text-sm text-ink mt-1">{STAGE_LABELS[stage]}</p>
@@ -194,10 +194,10 @@ function PileSlide({ pile, index, total, gameId }: { pile: PileDef; index: numbe
   return (
     <div className="flex flex-col gap-6 py-4">
       <div>
-        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">
           Pile {index + 1} of {total}
         </p>
-        <h2 className="text-2xl font-bold text-ink">{pile.name}</h2>
+        <h2 className="font-display text-2xl font-bold text-ink">{pile.name}</h2>
         {pile.location && (
           <p className="text-sm text-ink-soft mt-1">{pile.location}</p>
         )}
@@ -216,7 +216,7 @@ function PileSlide({ pile, index, total, gameId }: { pile: PileDef; index: numbe
       )}
 
       <div className="bg-surface rounded-card shadow-1 border border-border px-4 py-4">
-        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">
           What it's for
         </p>
         <p className="text-base text-ink leading-relaxed">{pile.purpose}</p>
@@ -247,16 +247,16 @@ function ConceptSlide({ term, definition, index, total }: {
   return (
     <div className="flex flex-col gap-6 py-4">
       <div>
-        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">
           Concept {index + 1} of {total}
         </p>
-        <h2 className="text-2xl font-bold text-ink">{term}</h2>
+        <h2 className="font-display text-2xl font-bold text-ink">{term}</h2>
       </div>
 
       <DiagramPlaceholder label={term} />
 
       <div className="bg-surface rounded-card shadow-1 border border-border px-4 py-4">
-        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">
           What it is
         </p>
         <p className="text-base text-ink leading-relaxed">{definition}</p>
@@ -269,10 +269,10 @@ function SetupSlide({ step, index, total }: { step: SetupStep; index: number; to
   return (
     <div className="flex flex-col gap-6 py-4">
       <div>
-        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">
           Step {index + 1} of {total}
         </p>
-        <h2 className="text-xl font-bold text-ink leading-snug">{step.instruction}</h2>
+        <h2 className="font-display text-xl font-bold text-ink leading-snug">{step.instruction}</h2>
       </div>
 
       {step.detail && (
@@ -294,10 +294,10 @@ function PracticeIntroSlide({ game }: { game: GameRules }) {
   return (
     <div className="flex flex-col gap-6 py-4">
       <div>
-        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">
           {isRealTime ? "Coached Practice" : "How to Play"}
         </p>
-        <h2 className="text-2xl font-bold text-ink">
+        <h2 className="font-display text-2xl font-bold text-ink">
           {isRealTime ? "Let's slow it down." : "Let's walk through a turn."}
         </h2>
       </div>
@@ -321,10 +321,10 @@ function PlayStepSlide({ step, index, total }: { step: { id: string; instruction
   return (
     <div className="flex flex-col gap-6 py-4">
       <div>
-        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">
           {index + 1} of {total} · During play
         </p>
-        <h2 className="text-xl font-bold text-ink leading-snug">{step.instruction}</h2>
+        <h2 className="font-display text-xl font-bold text-ink leading-snug">{step.instruction}</h2>
       </div>
 
       {step.detail && (
@@ -345,10 +345,10 @@ function TurnPhaseSlide({ phase, index, total }: {
   return (
     <div className="flex flex-col gap-6 py-4">
       <div>
-        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">
           {index + 1} of {total} · On your turn
         </p>
-        <h2 className="text-xl font-bold text-ink leading-snug">{phase.instruction}</h2>
+        <h2 className="font-display text-xl font-bold text-ink leading-snug">{phase.instruction}</h2>
       </div>
 
       {phase.options && phase.options.length > 0 && (
@@ -375,10 +375,10 @@ function PrioritiesSlide({ priorities }: { priorities: string[] }) {
   return (
     <div className="flex flex-col gap-6 py-4">
       <div>
-        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">
           Coaching
         </p>
-        <h2 className="text-2xl font-bold text-ink">Keep these in mind.</h2>
+        <h2 className="font-display text-2xl font-bold text-ink">Keep these in mind.</h2>
       </div>
 
       <ul className="flex flex-col gap-3">
@@ -403,10 +403,10 @@ function EndConditionSlide({
   return (
     <div className="flex flex-col gap-6 py-4">
       <div>
-        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">
           How a hand ends
         </p>
-        <h2 className="text-2xl font-bold text-ink">Calls to know.</h2>
+        <h2 className="font-display text-2xl font-bold text-ink">Calls to know.</h2>
       </div>
 
       {endOfRound && (
@@ -439,15 +439,15 @@ function ScoringSlide({ game, scoring, winCondition }: { game: GameRules; scorin
   return (
     <div className="flex flex-col gap-6 py-4">
       <div>
-        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">
           {scoring?.length ? "After each round" : "How to win"}
         </p>
-        <h2 className="text-2xl font-bold text-ink">{scoring?.length ? "Scoring." : "Win condition."}</h2>
+        <h2 className="font-display text-2xl font-bold text-ink">{scoring?.length ? "Scoring." : "Win condition."}</h2>
       </div>
 
       {game.endOfRound && (
         <div className="bg-surface-sunk rounded-card px-4 py-3">
-          <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-1">How a round ends</p>
+          <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-1">How a round ends</p>
           <p className="text-sm text-ink">{game.endOfRound}</p>
         </div>
       )}
@@ -464,7 +464,7 @@ function ScoringSlide({ game, scoring, winCondition }: { game: GameRules; scorin
       )}
 
       <div className="border-t border-border pt-4">
-        <p className="text-xs font-medium text-ink-soft uppercase tracking-wide mb-2">
+        <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">
           Winning
         </p>
         <p className="text-sm text-ink">{winCondition}</p>

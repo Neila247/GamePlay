@@ -9,7 +9,7 @@
   --border:       #E4E4E2;
   --ink:          #1C1C1A;
   --ink-soft:     #6B6B66;
-  --accent:       #3A3A38;
+  --accent:       #23211D;
   --accent-ink:   #FFFFFF;
   --warn:         #9A6B2F;
 
@@ -20,8 +20,8 @@
   --card-green:  #3E8E5A;
 
   /* Typography */
-  --font-display: system-ui, -apple-system, sans-serif;
-  --font-body:    system-ui, -apple-system, sans-serif;
+  --font-display: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-body:    'Public Sans', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono:    ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
 
   --text-xs:   0.75rem;
@@ -58,6 +58,9 @@
   --ease:     cubic-bezier(0.2, 0, 0, 1);
   --dur-fast: 120ms;
   --dur-base: 200ms;
+
+  /* Layout */
+  --app-max-w: 480px;
 
   /* Fixed bottom nav clearance — button height + wrapper padding + iOS safe area */
   --nav-bar-h: calc(var(--space-16) + var(--space-6) + env(safe-area-inset-bottom, 0px));
