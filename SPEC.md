@@ -1,7 +1,8 @@
 # Onboard — v1 Spec
 
-Working title: **Onboard**. v1 goal: prove the full loop on a single trusted
-game (**Dutch Blitz**) while gracefully handling anything else.
+Working title: **Onboard**. v1 goal: prove the full teaching loop across
+**14 curated, hand-authored games** (Dutch Blitz as the flagship real-time
+game; 11 turn-based titles including UNO Flip!, Jaipur, Skull, and others).
 
 ## 1. The loop
 
@@ -14,8 +15,8 @@ game (**Dutch Blitz**) while gracefully handling anything else.
    ├── yes → load hand-authored record (verified)
    └── no  → generate record via LLM (UNVERIFIED badge)
    ▼
-[ Rules screen ]  simplified, skimmable: objective, the pile types,
-   │              setup, how a hand plays, how scoring works
+[ Rules screen ]  simplified, skimmable: objective, pile/zone types,
+   │              setup, play loop or turn structure, scoring
    │  "Teach me to play →"
    ▼
 [ Guided session ]  branches on playModel (see §4)
@@ -26,8 +27,9 @@ game (**Dutch Blitz**) while gracefully handling anything else.
 
 ## 2. Screens
 
-**Home.** Big scan button, secondary search field, list of recently played /
-curated games. Mobile-first, table-friendly (large tap targets).
+**Home.** Landing page shows a grid of all 14 curated game tiles (cover
+images, name, player count). Mobile-first, table-friendly (large tap targets).
+Scan button and search field are secondary entry points.
 
 **Identify.** Camera capture → loading → "Looks like *Dutch Blitz* — right?"
 with a confirm + "search instead" escape. Confidence below a threshold skips
@@ -67,28 +69,42 @@ authored record should fail the build, not ship.
 
 ## 4. Guided session, by play model
 
-**turn-based** (future games like Uno): one instruction at a time. Confirm to
-advance setup; per turn, state whose turn it is, list options in plain
-language, wait for what the player did, advance. Always-available "ask the
-teacher" input answers from the rule data.
+The session engine (`src/lib/session.ts`) is a **pure state machine over
+`GameRules` data** — it branches on `playModel`, never on game id. Narration
+is generated from the structured record; no game-specific logic lives outside
+the data files.
 
-**real-time** (Dutch Blitz, v1): there are no turns, so no turn prompts.
-Three stages instead:
-1. **Concept tour** — walk the four pile types (Blitz, Post, Wood, the shared
-   Dutch Piles) and what each is *for*. This is the part everyone bounces off.
+**real-time** (Dutch Blitz, Kites, The Mind — 3 of the 14 curated games):
+there are no turns, so no turn prompts. Three stages:
+1. **Concept tour** — one slide per pile/zone (`piles[]`), explaining what
+   each is *for*. This is where people bounce off real-time games.
 2. **Setup walkthrough** — confirm each `setup` step one at a time.
-3. **Coached practice** — slow the `playLoop` down and coach the `priorities`
-   ("any exposed 1 goes to the centre", "prefer plays from your Blitz Pile —
-   it's the whole point"), rather than prompting individual moves. End on the
-   "Blitz!" condition and explain scoring.
+3. **Coached practice** — walk the `playLoop` steps, then coach `priorities`
+   (e.g. "hunt for 1s, feed your Blitz Pile"), end on the `specialCalls`
+   condition and explain scoring.
 
-"Ask the teacher" is available throughout, answering only from the rule data.
+**turn-based** (UNO Flip!, Jaipur, Skull, and 8 others — 11 of the 14):
+there are no pile definitions, so the concept tour uses the `glossary` as the
+mental-model step. Three stages:
+1. **Concept tour** — one slide per key `glossary` term.
+2. **Setup walkthrough** — confirm each `setup` step one at a time.
+3. **How to play** — walk the `turnStructure` phases, then `priorities` and
+   win condition.
+
+"Ask the teacher" (see §5) is available throughout all stages.
 
 ## 5. The teacher prompt (grounding contract)
 
-The teacher Netlify Function receives: the relevant `GameRules` slice + the
-current session state + the user's message. The system prompt instructs:
+The Netlify Function at `netlify/functions/teacher.mts` is **scaffolded and
+structurally complete** — routing, validation, response shaping. The Anthropic
+API call in `netlify/lib/teacher-core.ts` is ready. The UI component
+(`AskTeacher.tsx`) is built and wired to `src/lib/teacher.ts`; it renders a
+"Coming soon" placeholder (`COMING_SOON = true`) until the function is deployed
+with `ANTHROPIC_API_KEY` set.
 
+**Pending:** deploy the Netlify function and flip `COMING_SOON` to `false`.
+
+The grounding contract:
 - Answer **only** from the supplied rule data.
 - If the data doesn't cover the question, say so plainly and suggest checking
   the rulebook — do not improvise a ruling.
@@ -101,34 +117,39 @@ it does not recall rules.
 
 ## 6. Long-tail generation
 
-When no curated record exists, a separate function asks the model to produce a
-`GameRules` object (JSON only, validated against the schema) for the named
-game, with `source: "llm-generated"`, `verified: false`. The UI badges it
-clearly. Optionally cache generated records (Supabase) so the second person to
-scan that game gets it instantly — but caching a *generated* record never
-promotes it to verified.
+**Not yet built.** When no curated record exists, a separate function will ask
+the model to produce a `GameRules` object (JSON only, validated against the
+schema) for the named game, with `source: "llm-generated"`, `verified: false`.
+The UI will badge it clearly. Optionally cache generated records (Supabase) so
+the second person to scan that game gets it instantly — but caching a
+*generated* record never promotes it to verified.
 
-## 7. Build order (suggested)
+## 7. Build order
 
-1. Schema + types + the hand-authored Dutch Blitz record. Validate it.
-   (Already drafted in `/data/games/dutch-blitz.ts`.)
-2. Rules screen rendering purely from the Dutch Blitz record (no AI yet).
-3. Guided-session state machine over the record — real-time branch: concept
-   tour → setup → coached loop. Hard-code the narration first, prove the flow.
-4. Teacher function: swap hard-coded narration for grounded LLM responses; add
-   the "ask the teacher" input.
-5. Search-by-name → curated lookup.
-6. Long-tail LLM generation + UNVERIFIED badge.
-7. Photo identify (last — it's the shortcut, not the spine).
+**Done:**
+1. ✅ Schema + types + hand-authored Dutch Blitz record. Build-time validation.
+2. ✅ Rules screen rendering from any `GameRules` record.
+3. ✅ Guided-session state machine — both `real-time` and `turn-based` branches,
+   driven by data, hard-coded narration. Verified end-to-end for all 14 games.
+4. ✅ All 14 curated, hand-authored, verified game records in `/data/games/`.
+5. ✅ Home landing page with 14 game tiles (cover images, search by name).
+6. ✅ Teacher function scaffolded: `netlify/functions/teacher.mts` +
+   `netlify/lib/teacher-core.ts` + `AskTeacher.tsx` UI component.
+7. ✅ SVG diagrams for Dutch Blitz pile types (`TableLayout`, `CardSequence`).
 
-Doing AI last on each feature means you always have a working non-AI version
-to fall back to, and you never confuse "the flow is broken" with "the prompt
-is bad."
+**Pending:**
+- Deploy teacher Netlify function with `ANTHROPIC_API_KEY`; flip
+  `COMING_SOON` to `false` in `AskTeacher.tsx`.
+- SVG / visual diagrams for the remaining 13 games (all use
+  `DiagramPlaceholder` today).
+- Long-tail LLM generation + UNVERIFIED badge (§6).
+- Photo identify via camera (last — it's the shortcut, not the spine).
 
-## 8. Open questions for Neil
+## 8. Decisions made
 
-- One curated game (Dutch Blitz) or three for v1? (Dutch Blitz alone is a
-  defensible v1.)
-- Voice? You said "the app talks to you" — text-first is far cheaper to build
-  and debug; add TTS later as polish. Agree?
-- Persistence: do you want "resume a session" in v1, or is each one fresh?
+- **Scope:** 14 curated games for v1 (not 1–3). Dutch Blitz remains the
+  flagship; the data-driven engine means adding a game is a single data file,
+  not new code.
+- **Voice:** text-first. TTS is a polish step after the core loop is proven.
+- **Persistence:** sessions are fresh each time. No resume-a-session in v1;
+  local state only, no Supabase until it earns its place.
