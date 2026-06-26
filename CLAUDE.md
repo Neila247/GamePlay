@@ -47,7 +47,11 @@ Every game record carries `source` and `verified`:
 
 - `source: "hand-authored"`, `verified: true` — curated by us, transcribed
   from the official rulebook. Teacher reads strictly from the data. This is
-  the gold path. Dutch Blitz is the v1 example.
+  the gold path. Dutch Blitz is the flagship; all 14 curated records have been
+  **cross-checked against their official rulebook PDFs** in `/game_rules PDFs/`
+  (one folder per game). Those PDFs are the verification source of truth — when
+  editing a curated record, re-check it against the matching PDF, and treat any
+  mismatch between data and rulebook as a bug in the data.
 - `source: "llm-generated"`, `verified: false` — generated on demand for a
   game we don't have. Must be visibly flagged in the UI ("AI-generated, double
   check against your rulebook"). Never silently mixed in with verified games.

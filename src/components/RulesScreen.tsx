@@ -1,4 +1,5 @@
 import type { GameRules, PileDef, SetupStep, PlayStep, TurnPhase } from "../../data/games/dutch-blitz.ts";
+import { Spine } from "./Spine.tsx";
 
 type Props = { game: GameRules; onStart: () => void; onBack?: () => void };
 
@@ -15,8 +16,9 @@ export function RulesScreen({ game, onStart, onBack }: Props) {
             ← Back
           </button>
         )}
+        <Spine className="mb-3" />
         <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">Rules</p>
-        <h1 className="font-display text-2xl font-bold text-ink">{game.name}</h1>
+        <h1 className="font-display text-3xl font-bold text-ink leading-none">{game.name}</h1>
         <div className="flex gap-2 mt-3 flex-wrap">
           <Badge>{game.players.min}–{game.players.max} players</Badge>
           {game.estimatedMinutes && (
@@ -27,7 +29,7 @@ export function RulesScreen({ game, onStart, onBack }: Props) {
       </header>
 
       <Section title="Objective">
-        <p className="text-base text-ink">{game.objective}</p>
+        <p className="text-lg text-ink leading-relaxed">{game.objective}</p>
       </Section>
 
       {game.piles && game.piles.length > 0 && (
@@ -247,7 +249,7 @@ function TurnPhaseItem({ phase, index }: { phase: TurnPhase; index: number }) {
           <ul className="mt-2 flex flex-col gap-1">
             {phase.options.map((opt, i) => (
               <li key={i} className="text-xs text-ink-soft flex gap-2">
-                <span className="shrink-0">·</span>
+                <span className="shrink-0">—</span>
                 <span>{opt}</span>
               </li>
             ))}

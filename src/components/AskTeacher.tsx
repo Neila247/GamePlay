@@ -6,22 +6,15 @@ type Props = { game: GameRules };
 
 type Status = "idle" | "loading" | "answered" | "error";
 
-// Flip to false once the Netlify function + API key are wired up.
-const COMING_SOON = true;
+// Flip to true once the Netlify function + API key are wired up. While false,
+// the panel is hidden entirely (callers check this) rather than shipping a
+// "Coming soon" pill that occupies prime real estate on every session slide.
+export const TEACHER_ENABLED = false;
 
 // An "ask the teacher" panel, available throughout the guided session.
 // The AI call fires ONLY on submit — never proactively.
 export function AskTeacher({ game }: Props) {
-  if (COMING_SOON) {
-    return (
-      <div className="w-full bg-surface-sunk border border-border rounded-card px-4 py-3 flex items-center justify-between">
-        <span className="text-sm text-ink-soft">Ask the teacher</span>
-        <span className="text-xs text-ink-soft bg-surface border border-border rounded-pill px-2 py-1">
-          Coming soon
-        </span>
-      </div>
-    );
-  }
+  if (!TEACHER_ENABLED) return null;
 
   const [open, setOpen] = useState(false);
   const [question, setQuestion] = useState("");

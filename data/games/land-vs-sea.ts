@@ -141,8 +141,6 @@ export const landVsSea: GameRules = {
     "You may never show anyone else the hidden side of your own tiles.",
     "You may never steal a player's last tile.",
     "A tile stolen with the Steal action cannot be played on the same turn it is stolen.",
-    "Cards in hand can never go back into the stacks.",
-    "If you realise you have won during another player's turn, you must wait until your own turn to declare it.",
     "In 4-player Waypoint mode, team mates may not advise each other with words, gestures, or body language about where or how to place tiles.",
   ],
 

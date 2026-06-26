@@ -133,9 +133,10 @@ export function TableLayout() {
       <text x="244" y="470" fill="var(--ink-soft)" fontSize="10.5">Held face down.</text>
       <text x="244" y="484" fill="var(--ink-soft)" fontSize="10.5">No peeking ahead!</text>
 
-      {/* Legend */}
-      <use href="#tl-head" x="40" y="512" />
-      <text x="50" y="516" fill="var(--ink-soft)" fontSize="10">= the boy / girl figure on each card (it's what you alternate on Post Piles)</text>
+      {/* Legend — wrapped to two lines so it never overflows the viewBox width */}
+      <use href="#tl-head" x="40" y="510" />
+      <text x="50" y="514" fill="var(--ink-soft)" fontSize="10">= the boy / girl figure on each card —</text>
+      <text x="50" y="528" fill="var(--ink-soft)" fontSize="10">alternate these on your Post Piles.</text>
     </svg>
   );
 }

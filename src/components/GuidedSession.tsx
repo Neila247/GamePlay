@@ -1,13 +1,14 @@
 import { useState, useRef, useLayoutEffect } from "react";
 import type { GameRules, PileDef, SetupStep } from "../../data/games/dutch-blitz.ts";
-import { TableLayout } from "./diagrams/TableLayout.tsx";
 import { CardSequence } from "./diagrams/CardSequence.tsx";
+import { overviewFor } from "./diagrams/registry.tsx";
 import {
   initSession, advance, retreat, current, isLast, stageOf, stageProgress,
   STAGE_LABELS,
   type SlideKind,
 } from "../lib/session.ts";
-import { AskTeacher } from "./AskTeacher.tsx";
+import { AskTeacher, TEACHER_ENABLED } from "./AskTeacher.tsx";
+import { Spine } from "./Spine.tsx";
 
 type Props = { game: GameRules; onExit: () => void };
 
@@ -102,10 +103,13 @@ export function GuidedSession({ game, onExit }: Props) {
           <SlideContent game={game} slide={slide} />
         </main>
 
-        {/* Ask the teacher — available throughout the session */}
-        <div className="px-4 pt-2 pb-4 shrink-0">
-          <AskTeacher game={game} />
-        </div>
+        {/* Ask the teacher — available throughout the session (hidden until the
+            teacher function is deployed; see TEACHER_ENABLED) */}
+        {TEACHER_ENABLED && (
+          <div className="px-4 pt-2 pb-4 shrink-0">
+            <AskTeacher game={game} />
+          </div>
+        )}
 
         {/* Spacer — reserves height equal to the fixed nav so content above stays visible */}
         <div className="shrink-0" style={{ height: "var(--nav-bar-h)" }} aria-hidden="true" />
@@ -172,11 +176,31 @@ function SlideContent({ game, slide }: { game: GameRules; slide: SlideKind }) {
 // Shared utility
 // ---------------------------------------------------------------------------
 
-function DiagramPlaceholder({ label }: { label?: string }) {
+// Editorial figure plate. Until a game has its own hand-drawn SVG (only Dutch
+// Blitz does today), the teaching visual is an illuminated-manual plate: a
+// drop-cap monogram of the subject on paper, headed by the signature Spine and
+// captioned "Fig. n". Intentional and on-brand — not an empty grey box.
+function FigurePlate({ label, index }: { label?: string; index?: number }) {
+  const initial = (label ?? "?").trim().charAt(0).toUpperCase() || "?";
   return (
-    <div className="rounded-card border border-border bg-surface-sunk h-32 flex items-center justify-center">
-      <span className="text-xs text-ink-soft">{label ?? "Diagram"}</span>
-    </div>
+    <figure className="rounded-card border border-border bg-surface overflow-hidden">
+      <div className="flex items-center justify-between px-4 pt-3">
+        <span className="font-mono text-xs uppercase tracking-eyebrow text-ink-soft">
+          {index != null ? `Fig. ${index}` : "Fig."}
+        </span>
+        <Spine />
+      </div>
+      <div className="flex items-center justify-center py-8">
+        <span className="font-display text-3xl font-bold text-ink leading-none" aria-hidden="true">
+          {initial}
+        </span>
+      </div>
+      {label && (
+        <figcaption className="border-t border-border px-4 py-2 text-center text-xs text-ink-soft">
+          {label}
+        </figcaption>
+      )}
+    </figure>
   );
 }
 
@@ -188,6 +212,7 @@ function PileSlide({ pile, index, total, gameId }: { pile: PileDef; index: numbe
   // TableLayout and CardSequence are Dutch-Blitz-specific SVGs; all other games
   // use the neutral placeholder until their own diagrams are built.
   const isDutchBlitz = gameId === "dutch-blitz";
+  const Overview = overviewFor(gameId);
   const showTableLayout = index === 0;
   const showCardSequence = pile.sequence === "ascending" || pile.sequence === "descending";
 
@@ -205,7 +230,7 @@ function PileSlide({ pile, index, total, gameId }: { pile: PileDef; index: numbe
 
       {showTableLayout && (
         <div className="rounded-card overflow-hidden border border-border bg-surface-sunk p-3">
-          {isDutchBlitz ? <TableLayout /> : <DiagramPlaceholder label={`${pile.name} layout`} />}
+          {Overview ? <Overview /> : <FigurePlate label={`${pile.name} — table layout`} />}
         </div>
       )}
 
@@ -230,7 +255,7 @@ function PileSlide({ pile, index, total, gameId }: { pile: PileDef; index: numbe
 
       {showCardSequence && (
         <div className="rounded-card overflow-hidden border border-border bg-surface-sunk p-3">
-          {isDutchBlitz ? <CardSequence /> : <DiagramPlaceholder label={`${pile.sequence} sequence`} />}
+          {isDutchBlitz ? <CardSequence /> : <FigurePlate label={`Built ${pile.sequence}`} />}
         </div>
       )}
     </div>
@@ -253,7 +278,7 @@ function ConceptSlide({ term, definition, index, total }: {
         <h2 className="font-display text-2xl font-bold text-ink">{term}</h2>
       </div>
 
-      <DiagramPlaceholder label={term} />
+      <FigurePlate label={term} index={index + 1} />
 
       <div className="bg-surface rounded-card shadow-1 border border-border px-4 py-4">
         <p className="text-xs font-medium text-ink-soft uppercase tracking-eyebrow mb-2">
@@ -291,6 +316,10 @@ function PracticeIntroSlide({ game }: { game: GameRules }) {
     ? game.playLoop?.summary
     : game.turnStructure?.summary;
 
+  // Games with pile slides (Dutch Blitz) already showed their overview diagram
+  // during the concept tour; everyone else gets it here, before the walkthrough.
+  const Overview = game.piles?.length ? null : overviewFor(game.id);
+
   return (
     <div className="flex flex-col gap-6 py-4">
       <div>
@@ -301,6 +330,12 @@ function PracticeIntroSlide({ game }: { game: GameRules }) {
           {isRealTime ? "Let's slow it down." : "Let's walk through a turn."}
         </h2>
       </div>
+
+      {Overview && (
+        <div className="rounded-card overflow-hidden border border-border bg-surface-sunk p-3">
+          <Overview />
+        </div>
+      )}
 
       {summary && (
         <div className="bg-surface rounded-card shadow-1 border border-border px-4 py-4">
@@ -470,9 +505,10 @@ function ScoringSlide({ game, scoring, winCondition }: { game: GameRules; scorin
         <p className="text-sm text-ink">{winCondition}</p>
       </div>
 
-      <div className="bg-surface-sunk rounded-card px-4 py-4 text-center">
-        <p className="text-base font-medium text-ink">You know {game.name}.</p>
-        <p className="text-sm text-ink-soft mt-1">Shuffle up and deal.</p>
+      <div className="bg-surface-sunk rounded-card px-4 py-6 flex flex-col items-center gap-3 text-center">
+        <Spine variant="rule" className="w-24" />
+        <p className="font-display text-lg font-bold text-ink">You know {game.name}.</p>
+        <p className="text-sm text-ink-soft">Shuffle up and deal.</p>
       </div>
     </div>
   );

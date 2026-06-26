@@ -75,6 +75,7 @@ export const cabo: GameRules = {
     "The player with the lowest score when 'Cabo' is called wins the round. Play multiple rounds as desired; the player with the lowest cumulative score wins.",
 
   scoring: [
+    "Ace = 1 (the lowest-ranking card).",
     "Number cards 2–10 = face value.",
     "Jack = 11.",
     "Queen = 12.",

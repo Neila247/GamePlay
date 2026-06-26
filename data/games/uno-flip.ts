@@ -9,6 +9,7 @@ export const unoFlip: GameRules = {
   source: "hand-authored",
   verified: true,
   players: { min: 2, max: 10 },
+  ageRecommendation: 7,
   estimatedMinutes: 30,
   playModel: "turn-based",
 

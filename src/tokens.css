@@ -13,11 +13,17 @@
   --accent-ink:   #FFFFFF;
   --warn:         #9A6B2F;
 
-  /* Card colours — game content, not brand; used in Dutch Blitz diagrams */
+  /* Card colours — game content, not brand; the four signature-spectrum hues */
   --card-red:    #C0443B;
   --card-blue:   #2F6DB0;
   --card-yellow: #D9A521;
   --card-green:  #3E8E5A;
+
+  /* Additional game-content colours used only inside teaching diagrams
+     (e.g. Kites' orange/purple timers, Paris' orange player). Not part of the
+     signature spectrum. */
+  --card-orange: #CF7A33;
+  --card-purple: #7A4F9E;
 
   /* Typography */
   --font-display: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;

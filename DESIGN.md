@@ -1,11 +1,13 @@
 # DESIGN.md — Onboard
 
-> **Status: PoC neutral skin. Direction not yet chosen.**
-> This file defines the *structure* of the design system and fills it with
-> plain, unopinionated defaults so the PoC looks clean without committing to a
-> visual identity. When a direction is chosen later, swap the token **values**
-> below and update the typefaces — the token **names** and the component code
-> never change. That's what makes the re-skin a config edit, not a rewrite.
+> **Status: direction chosen — "The Manual".**
+> The PoC greybox has been replaced by a committed identity: an editorial
+> *instruction-manual* aesthetic — ink on warm paper, a real display/body type
+> pairing (Outfit + Public Sans), and a four-colour signature drawn from the
+> game world. The token **names** and component code are unchanged from the
+> greybox; only the token **values**, the typefaces, and the Signature section
+> moved. That separation is what made adopting a direction a config edit, not a
+> rewrite — and a future re-skin works the same way.
 
 ## How this file is used
 
@@ -17,48 +19,57 @@ discipline section in `CLAUDE.md` — inline raw values are treated as bugs.
 To re-skin later: edit the values in this file + the Tailwind config, pick real
 typefaces, and revisit the "Signature" section. Done.
 
-## Tokens (PoC neutral defaults)
+## Tokens
 
 ### Colour
 
-Semantic names, not literal ones. A near-greyscale set plus one restrained,
-muted accent. Deliberately quiet — this should read as "not styled yet."
+Semantic names, not literal ones. A warm near-greyscale (paper + ink) carries
+the whole UI; colour enters only through the signature spectrum (below). The
+accent is **ink**, not a brand hue — in "The Manual", emphasis is weight and
+contrast, the way a printed page works, not a coloured button.
 
-| Token            | PoC value   | Role                                  |
+| Token            | Value       | Role                                  |
 |------------------|-------------|---------------------------------------|
-| `--bg`           | `#FAFAF9`   | app background                        |
+| `--bg`           | `#FAFAF9`   | app background (warm paper)           |
 | `--surface`      | `#FFFFFF`   | cards, sheets, raised surfaces        |
 | `--surface-sunk` | `#F4F4F3`   | insets, wells, disabled fields        |
 | `--border`       | `#E4E4E2`   | hairlines, dividers, input borders    |
 | `--ink`          | `#1C1C1A`   | primary text                          |
 | `--ink-soft`     | `#6B6B66`   | secondary text, captions              |
-| `--accent`       | `#3A3A38`   | primary actions (muted on purpose)    |
+| `--accent`       | `#23211D`   | ink — primary actions, progress, focus|
 | `--accent-ink`   | `#FFFFFF`   | text/icon on accent                   |
 | `--warn`         | `#9A6B2F`   | the UNVERIFIED badge / cautions       |
 
-**Card colours** — game content, not brand. Used only in teaching diagrams.
-These represent the four Dutch Blitz card colours and stay constant across skins.
+**Card colours / signature spectrum.** These four are the app's signature (see
+Signature, below) *and* the Dutch Blitz card colours — one set serving both. As
+the signature they appear as the four-tab `Spine` mark; as game content they
+colour the teaching diagrams. Constant across skins.
 
-| Token            | PoC value   | Role                                  |
+| Token            | Value       | Role                                  |
 |------------------|-------------|---------------------------------------|
-| `--card-red`     | `#C0443B`   | Dutch Blitz red card header           |
-| `--card-blue`    | `#2F6DB0`   | Dutch Blitz blue card header          |
-| `--card-yellow`  | `#D9A521`   | Dutch Blitz yellow card header        |
-| `--card-green`   | `#3E8E5A`   | Dutch Blitz green card header         |
+| `--card-red`     | `#C0443B`   | signature tab 1 · Dutch Blitz red     |
+| `--card-blue`    | `#2F6DB0`   | signature tab 2 · Dutch Blitz blue    |
+| `--card-yellow`  | `#D9A521`   | signature tab 3 · Dutch Blitz yellow  |
+| `--card-green`   | `#3E8E5A`   | signature tab 4 · Dutch Blitz green   |
+| `--card-orange`  | `#CF7A33`   | diagrams only (Kites/Paris) — not signature |
+| `--card-purple`  | `#7A4F9E`   | diagrams only (Kites) — not signature |
 
-> The accent is intentionally a near-charcoal, not a brand colour. When you
-> pick a direction, this is the first value to change.
+> The accent stays ink on purpose. Colour belongs to the signature spectrum,
+> not to controls — keep buttons, progress, and focus in ink so the four
+> colours stay special wherever they appear.
 
 ### Type
 
-PoC uses a **system font stack on purpose** — it signals "greybox," costs
-nothing, and avoids defaulting to Inter (the classic AI tell). Committing a
-direction = replacing these with a real display/body pairing.
+A real display/body pairing, loaded from Google Fonts in `index.css`. **Outfit**
+(geometric, confident) sets headings and the signature; **Public Sans** (a US
+government typeface — literally the voice of official manuals and forms) carries
+body and UI. The pairing is deliberately un-Inter: it reads as printed
+documentation, not as a generic SaaS dashboard.
 
-| Token            | PoC value                                   | Role        |
+| Token            | Value                                       | Role        |
 |------------------|---------------------------------------------|-------------|
-| `--font-display` | system-ui stack (placeholder)               | headings    |
-| `--font-body`    | system-ui stack (placeholder)               | body, UI    |
+| `--font-display` | `'Outfit'`, system-ui fallback              | headings    |
+| `--font-body`    | `'Public Sans'`, system-ui fallback         | body, UI    |
 | `--font-mono`    | ui-monospace stack                          | data, codes |
 
 Type scale (rem), with intentional steps — don't invent sizes outside it:
@@ -77,30 +88,31 @@ One rhythm, multiples of 4px. Use steps, never arbitrary px.
 
 ### Radius
 
-| Token            | PoC value | Role                       |
+| Token            | Value     | Role                       |
 |------------------|-----------|----------------------------|
 | `--radius-sm`    | `6px`     | inputs, small controls     |
 | `--radius-card`  | `10px`    | cards, sheets              |
-| `--radius-pill`  | `999px`   | pills, badges              |
+| `--radius-pill`  | `999px`   | pills, badges, the Spine tabs |
 
 ### Elevation / shadow
 
-Keep it minimal in the PoC — one soft shadow, used sparingly.
+Minimal — one soft shadow, used sparingly. Depth comes from hairline borders on
+paper, not from glow.
 
-| Token         | PoC value                          | Role            |
+| Token         | Value                              | Role            |
 |---------------|------------------------------------|-----------------|
 | `--shadow-1`  | `0 1px 2px rgba(0,0,0,.06)`        | raised surfaces |
 
 ### Motion
 
-| Token            | PoC value              | Role                     |
+| Token            | Value                  | Role                     |
 |------------------|------------------------|--------------------------|
 | `--ease`         | `cubic-bezier(.2,.0,.0,1)` | standard easing      |
 | `--dur-fast`     | `120ms`                | taps, toggles            |
 | `--dur-base`     | `200ms`                | transitions, reveals     |
 
-Respect `prefers-reduced-motion` everywhere. In the PoC, keep motion functional
-only (state changes) — no ambient/decorative animation yet.
+Respect `prefers-reduced-motion` everywhere. Keep motion functional only (state
+changes) — no ambient/decorative animation.
 
 ## Tailwind wiring (sketch)
 
@@ -140,15 +152,29 @@ direction. AI-generated UI clusters here:
 - Decorative numbered markers (01 / 02 / 03) where nothing is actually a sequence.
 - Copy that sells instead of guiding ("Unlock the magic of…").
 
-## Signature (placeholder)
+## Signature — the four-colour Spine
 
-> The one memorable element the app is remembered by. **Deliberately left blank
-> for the PoC.** When a direction is chosen, define exactly one signature here
-> and keep everything around it quiet. (For Dutch Blitz, the game's own world —
-> Pennsylvania-Dutch folk art, the boy/girl card faces, the four pile types as
-> a tactile layout — is a strong, non-generic well to draw the signature from.)
+The one memorable element: a **four-tab colour mark** in red / blue / yellow /
+green — the Dutch Blitz card spectrum, reused as the app's brand. It reads like
+the colour-coded tabs down the edge of a printed manual, tying "The Manual"
+concept to the game world it teaches. Implemented once as `src/components/Spine.tsx`
+and used in two forms:
 
-## Copy voice (applies even in the PoC)
+- **`bar`** — four short tabs under a top-level title (Home, Rules header).
+- **`rule`** — four equal segments spanning a width, as a coloured divider or a
+  figure-plate header in the guided session.
+
+Rules for keeping it special:
+
+- **One signature, kept quiet around it.** The Spine appears at page titles,
+  on figure plates, and on the "you've learned it" finish — not on every
+  section. Everywhere else stays ink-on-paper.
+- **Controls never borrow the colours.** Buttons, progress, and focus stay ink
+  (see Colour). The four colours mean "this is the game world," nothing else.
+- The colours are fixed game content, so the Spine survives a re-skin even as
+  the paper/ink tokens change around it.
+
+## Copy voice
 
 - Plain verbs, sentence case, no filler. Name things by what the user controls.
 - Buttons say what happens: "Start setup", not "Submit". Keep the same word

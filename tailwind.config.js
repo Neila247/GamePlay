@@ -63,6 +63,7 @@ export default {
     extend: {
       aspectRatio: {
         box: "2 / 3",
+        tile: "3 / 4",
       },
       maxWidth: {
         app: "var(--app-max-w)",

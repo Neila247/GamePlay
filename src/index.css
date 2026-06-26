@@ -32,6 +32,12 @@ body {
     aspect-ratio: 2 / 3;
   }
 
+  /* Catalogue-plate tile — the shelf grid. 3:4 holds both the square and
+     portrait covers without cropping (cover is contained, not filled). */
+  .aspect-tile {
+    aspect-ratio: 3 / 4;
+  }
+
   /* Card colour backgrounds — wired from tokens, used in game tiles and diagrams */
   .bg-card-green  { background-color: var(--card-green);  }
   .bg-card-red    { background-color: var(--card-red);    }

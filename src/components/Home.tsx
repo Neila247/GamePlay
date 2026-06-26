@@ -1,3 +1,4 @@
+import { Spine } from "./Spine.tsx";
 import caboCover from "../assets/covers/cabo.jpg";
 import dutchBlitzCover from "../assets/covers/dutch-blitz.jpg";
 import fungiMorelsCover from "../assets/covers/fungi-morels.jpg";
@@ -43,7 +44,8 @@ export function Home({ onSelectGame }: Props) {
   return (
     <div className="min-h-screen bg-bg">
       <header className="px-4 pt-8 pb-4">
-        <h1 className="font-display text-xl font-bold text-ink">Your games</h1>
+        <Spine className="mb-3" />
+        <h1 className="font-display text-2xl font-bold text-ink leading-none">Your games</h1>
         <p className="text-sm text-ink-soft mt-2">Learn the game you already own.</p>
       </header>
 
@@ -88,11 +90,14 @@ export function Home({ onSelectGame }: Props) {
 function GameTile({ game }: { game: GameEntry }) {
   return (
     <div>
-      <div className="rounded-card overflow-hidden bg-surface-sunk shadow-1">
+      {/* Catalogue plate: every cover sits in the same 3:4 frame, contained (no
+          cropping) on paper, so the shelf grid and the names below stay aligned
+          regardless of the source art's aspect ratio. */}
+      <div className="aspect-tile rounded-card overflow-hidden bg-surface border border-border shadow-1 p-2 flex items-center justify-center">
         <img
           src={game.cover}
           alt={game.name}
-          className="w-full h-auto block"
+          className="max-w-full max-h-full w-auto h-auto object-contain block rounded-sm"
         />
       </div>
       <p className="text-sm font-medium text-ink mt-2 leading-snug">

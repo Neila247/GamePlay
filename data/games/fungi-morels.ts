@@ -15,7 +15,7 @@ export const fungiMorels: GameRules = {
   playModel: "turn-based",
 
   components: [
-    "86 Forest cards: Honey fungus (×10), Tree Ear (×8), Lawyer's Wig (×6), Shiitake (×5), Hen of the Woods (×5), Birch bolete (×4), Porcini (×4), Chanterelle (×4), Morels (×3), Fly agaric (×5), Butter (×3), Cidre (×5), Pan (×13), Basket (×5), Moon (×8)",
+    "86 Forest cards: Honey fungus (×10), Tree Ear (×8), Lawyer's Wig (×6), Shiitake (×5), Hen of the Woods (×5), Birch bolete (×4), Porcini (×4), Chanterelle (×4), Morels (×3), Fly agaric (×5), Butter (×3), Cidre (×3), Pan (×13), Basket (×5), Moon (×8)",
     "8 Night cards (one for each mushroom type except Morels and Fly agaric)",
     "18 Sticks (currency for reaching deeper into the Forest)",
     "1 Pair of Shoes card (marks the immediate Forest area)",

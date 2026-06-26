@@ -133,7 +133,6 @@ export const monopolyDeal: GameRules = {
     House: "Add to a full property set to increase its rent value by 3M.",
     Hotel: "Add to a full property set (that already has a House) to increase its rent value by 4M.",
     "Pass Go": "Draw 2 extra cards from the draw pile immediately.",
-    "Trade Route": "Not used in Monopoly Deal.",
   },
 };
 

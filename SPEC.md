@@ -98,11 +98,11 @@ mental-model step. Three stages:
 The Netlify Function at `netlify/functions/teacher.mts` is **scaffolded and
 structurally complete** — routing, validation, response shaping. The Anthropic
 API call in `netlify/lib/teacher-core.ts` is ready. The UI component
-(`AskTeacher.tsx`) is built and wired to `src/lib/teacher.ts`; it renders a
-"Coming soon" placeholder (`COMING_SOON = true`) until the function is deployed
-with `ANTHROPIC_API_KEY` set.
+(`AskTeacher.tsx`) is built and wired to `src/lib/teacher.ts`; while
+`TEACHER_ENABLED = false` the panel is hidden entirely (the session simply omits
+it) until the function is deployed with `ANTHROPIC_API_KEY` set.
 
-**Pending:** deploy the Netlify function and flip `COMING_SOON` to `false`.
+**Pending:** deploy the Netlify function and flip `TEACHER_ENABLED` to `true`.
 
 The grounding contract:
 - Answer **only** from the supplied rule data.
@@ -131,17 +131,23 @@ the second person to scan that game gets it instantly — but caching a
 2. ✅ Rules screen rendering from any `GameRules` record.
 3. ✅ Guided-session state machine — both `real-time` and `turn-based` branches,
    driven by data, hard-coded narration. Verified end-to-end for all 14 games.
-4. ✅ All 14 curated, hand-authored, verified game records in `/data/games/`.
+4. ✅ All 14 curated, hand-authored game records in `/data/games/`, each
+   **verified against its official rulebook PDF** in `/game_rules PDFs/`
+   (objective, components, setup, turn/loop, scoring, edge cases). Corrections
+   from that pass are recorded in git history.
 5. ✅ Home landing page with 14 game tiles (cover images, search by name).
 6. ✅ Teacher function scaffolded: `netlify/functions/teacher.mts` +
    `netlify/lib/teacher-core.ts` + `AskTeacher.tsx` UI component.
-7. ✅ SVG diagrams for Dutch Blitz pile types (`TableLayout`, `CardSequence`).
+7. ✅ Per-game SVG diagrams for **all 14 games**. Dutch Blitz keeps its
+   bespoke `TableLayout` + `CardSequence`; every other game has a hand-built
+   overview diagram (`src/components/diagrams/`), wired through
+   `diagrams/registry.tsx` and shown at the top of its guided session. The
+   editorial `FigurePlate` remains the fallback for any concept without one.
 
 **Pending:**
 - Deploy teacher Netlify function with `ANTHROPIC_API_KEY`; flip
-  `COMING_SOON` to `false` in `AskTeacher.tsx`.
-- SVG / visual diagrams for the remaining 13 games (all use
-  `DiagramPlaceholder` today).
+  `TEACHER_ENABLED` to `true` in `AskTeacher.tsx` (while `false`, the panel is
+  hidden rather than showing a "Coming soon" pill).
 - Long-tail LLM generation + UNVERIFIED badge (§6).
 - Photo identify via camera (last — it's the shortcut, not the spine).
 

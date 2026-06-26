@@ -8,7 +8,7 @@ export const kites: GameRules = {
   name: "Kites",
   source: "hand-authored",
   verified: true,
-  players: { min: 2, max: 5 },
+  players: { min: 2, max: 6 },
   estimatedMinutes: 15,
   playModel: "real-time",
 
@@ -37,9 +37,7 @@ export const kites: GameRules = {
     {
       id: "deal",
       instruction:
-        "Shuffle all Kite Cards together. Deal cards face-down to each player based on player count: 2–3 players get 5 cards each; 4 players get 4 cards each; 5 players get 3 cards each. Players should not look at their cards yet.",
-      detail:
-        "With 2 players there is an alternate variant: deal 5 cards each using only 4 of the 6 timers — see Warm-up Mode for the simpler 4-timer setup.",
+        "Shuffle all Kite Cards together. Deal cards face-down to each player based on player count: 2–3 players get 5 cards each; 4 players get 4 cards each; 5–6 players get 3 cards each. Players should not look at their cards yet.",
     },
     {
       id: "draw-piles",
